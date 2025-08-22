@@ -1,0 +1,294 @@
+% Glavni dokument za udžbenik iz logike kroz Python
+% Autor: [Ime autora]
+% Sveučilište u Zagrebu, 2024
+
+\documentclass[11pt,a4paper,twoside,openright]{book}
+
+% ===================================
+% PAKETI
+% ===================================
+
+% Osnovni paketi za hrvatski jezik
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[croatian]{babel}
+
+% Matematika i simboli
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{stmaryrd} % Za dodatne logičke simbole
+\usepackage{bussproofs} % Za dokaze u prirodnoj dedukciji
+
+% Programski kod
+\usepackage{listings}
+\usepackage{minted} % Naprednije označavanje koda
+\usepackage{tcolorbox}
+\tcbuselibrary{minted,skins,breakable}
+
+% Grafika i boje
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{trees,arrows,positioning,calc,shapes}
+\usepackage{xcolor}
+\usepackage{colortbl}
+
+% Dizajn stranice
+\usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype} % Poboljšava tipografiju
+
+% Hiperveze i reference
+\usepackage[colorlinks=true,linkcolor=blue!70!black,citecolor=green!50!black,urlcolor=blue!70!black]{hyperref}
+\usepackage{cleveref}
+
+% Tablice i liste
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{multicol}
+
+% Dodatni paketi
+\usepackage{epigraph}
+\usepackage{marginnote}
+\usepackage{mdframed}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ===================================
+% DEFINICIJE BOJA
+% ===================================
+
+\definecolor{pythonblue}{RGB}{53,114,165}
+\definecolor{pythonyellow}{RGB}{255,217,64}
+\definecolor{pythongreen}{RGB}{40,167,69}
+\definecolor{pythonred}{RGB}{220,53,69}
+\definecolor{pythongray}{RGB}{108,117,125}
+\definecolor{codebg}{RGB}{248,249,250}
+\definecolor{theorembg}{RGB}{240,248,255}
+\definecolor{examplebg}{RGB}{245,255,245}
+\definecolor{warningbg}{RGB}{255,250,240}
+
+% ===================================
+% STILOVI ZA KOD
+% ===================================
+
+% Definicija Python stila za listings
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{pythonblue}\bfseries,
+    stringstyle=\color{pythongreen},
+    commentstyle=\color{pythongray}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{pythongray},
+    stepnumber=1,
+    numbersep=10pt,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    frameround=tttt,
+    framesep=5pt,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b
+}
+
+% Stilizirana kutija za Python kod
+\newtcblisting{pythoncode}[1][]{
+    listing engine=minted,
+    minted language=python,
+    minted options={
+        fontsize=\small,
+        breaklines,
+        autogobble,
+        linenos,
+        numbersep=5pt
+    },
+    colback=codebg,
+    colframe=pythonblue!70,
+    listing only,
+    left=5mm,
+    enhanced,
+    overlay={\begin{tcbclipinterior}\fill[pythonblue!20] (frame.south west) rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+    #1
+}
+
+% ===================================
+% TEOREMI I OKRUŽENJA
+% ===================================
+
+\theoremstyle{definition}
+\newtheorem{definicija}{Definicija}[chapter]
+\newtheorem{aksiom}{Aksiom}[chapter]
+\newtheorem{napomena}{Napomena}[chapter]
+
+\theoremstyle{plain}
+\newtheorem{teorem}{Teorem}[chapter]
+\newtheorem{propozicija}{Propozicija}[chapter]
+\newtheorem{lema}{Lema}[chapter]
+\newtheorem{korolar}{Korolar}[chapter]
+
+\theoremstyle{remark}
+\newtheorem{primjer}{Primjer}[chapter]
+\newtheorem{vježba}{Vježba}[chapter]
+
+% Stilizirana okruženja
+\newenvironment{definicijaokvir}
+    {\begin{mdframed}[backgroundcolor=theorembg,linecolor=pythonblue,linewidth=2pt]
+    \begin{definicija}}
+    {\end{definicija}\end{mdframed}}
+
+\newenvironment{primjerokvir}
+    {\begin{mdframed}[backgroundcolor=examplebg,linecolor=pythongreen,linewidth=2pt]
+    \begin{primjer}}
+    {\end{primjer}\end{mdframed}}
+
+\newenvironment{upozorenje}
+    {\begin{mdframed}[backgroundcolor=warningbg,linecolor=pythonred,linewidth=2pt]
+    \textbf{Upozorenje:} }
+    {\end{mdframed}}
+
+% ===================================
+% PRILAGODBA NASLOVA
+% ===================================
+
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries\color{pythonblue}}
+{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+
+\titleformat{\section}
+{\normalfont\Large\bfseries\color{pythonblue!80}}
+{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color{pythonblue!60}}
+{\thesubsection}{1em}{}
+
+% ===================================
+% ZAGLAVLJA I PODNOŽJA
+% ===================================
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\rightmark}
+\fancyhead[RE]{\leftmark}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ===================================
+% MAKRONAREDBE
+% ===================================
+
+% Logički simboli prema pojmovniku
+\newcommand{\logsud}[1]{\mathit{#1}} % Za sudove/propozicije
+\newcommand{\konj}{\land}             % Konjunkcija
+\newcommand{\disj}{\lor}              % Disjunkcija  
+\newcommand{\impl}{\rightarrow}       % Implikacija
+\newcommand{\biimp}{\leftrightarrow}  % Bikondicional
+\newcommand{\svaki}{\forall}          % Univerzalni kvantifikator
+\newcommand{\postoji}{\exists}        % Egzistencijalni kvantifikator
+
+% Python inline kod
+\newcommand{\pyinline}[1]{\texttt{\color{pythonblue}#1}}
+
+% Jupyter bilježnica referenca
+\newcommand{\jupyter}[1]{\marginpar{\small\color{pythongreen}\faFileCode\ #1.ipynb}}
+
+% ===================================
+% DOKUMENT
+% ===================================
+
+\begin{document}
+
+% ----------------------------------
+% NASLOVNICA
+% ----------------------------------
+\frontmatter
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries\color{pythonblue} LOGIKA KROZ PYTHON\par}
+    \vspace{1cm}
+    {\Large\itshape Od sudova do strojnog zaključivanja\par}
+    
+    \vspace{3cm}
+    
+    \begin{tikzpicture}
+        \node[circle,draw=pythonblue,line width=2pt,minimum size=3cm] (logic) at (0,0) {
+            \Large $\vdash$
+        };
+        \node[circle,draw=pythonyellow,line width=2pt,minimum size=3cm] (python) at (2,0) {
+            \Large \texttt{Py}
+        };
+        \draw[->,thick,pythongreen] (logic) -- (python);
+    \end{tikzpicture}
+    
+    \vspace{3cm}
+    
+    {\large\scshape Sveučilišni udžbenik\par}
+    \vspace{1cm}
+    {\large [Ime autora]\par}
+    
+    \vfill
+    
+    {\large Sveučilište u Zagrebu\par}
+    {\large 2024\par}
+\end{titlepage}
+
+% ----------------------------------
+% SADRŽAJ
+% ----------------------------------
+\tableofcontents
+
+% ----------------------------------
+% PREDGOVOR
+% ----------------------------------
+\chapter*{Predgovor}
+\addcontentsline{toc}{chapter}{Predgovor}
+
+Ovaj udžbenik predstavlja moderan pristup učenju logike kroz programski jezik Python. Spajanjem apstraktnih logičkih koncepata s konkretnom implementacijom u kodu, studenti mogu neposredno eksperimentirati s logičkim sustavima i dublje razumjeti njihovu strukturu.
+
+Udžbenik koristi hrvatsku terminologiju prema standardnom pojmovniku logike, ali uvodi i međunarodne termine važne za rad u području računarstva i umjetne inteligencije.
+
+Svako poglavlje popraćeno je Jupyter bilježnicama koje omogućuju interaktivno učenje i eksperimentiranje.
+
+% ----------------------------------
+% UVOD
+% ----------------------------------
+\mainmatter
+
+\input{uvod}
+
+% ----------------------------------
+% DIO I: OSNOVE
+% ----------------------------------
+\part{SVJETOVI DEDUKTIVNE LOGIKE}
+
+
+% ----------------------------------
+% DODACI
+% ----------------------------------
+\appendix
+
+\chapter{Pojmovnik}
+% Sažetak korištenih termina s referencama na pojmovnik_main.tex
+
+\chapter{Rješenja vježbi}
+% Rješenja odabranih vježbi iz pojedinih poglavlja
+
+% ----------------------------------
+% BIBLIOGRAFIJA I KAZALO
+% ----------------------------------
+\backmatter
+
+\bibliographystyle{plain}
+% \bibliography{literatura}
+
+\printindex
+
+\end{document}
