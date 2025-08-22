@@ -1,6 +1,3 @@
-% Glavni dokument za udžbenik iz logike kroz Python
-% Autor: [Ime autora]
-% Sveučilište u Zagrebu, 2024
 
 \documentclass[11pt,a4paper,twoside,openright]{book}
 
@@ -9,9 +6,14 @@
 % ===================================
 
 % Osnovni paketi za hrvatski jezik
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage{fontspec}        % Omogućuje korištenje OpenType fontova u XeTeX/LuaTeX
 \usepackage[croatian]{babel}
+\usepackage{lmodern}         % I dalje je dobro imati za matematičke fontove
+
+% Postavljanje zadanih fontova na Latin Modern (moderna verzija)
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
 
 % Matematika i simboli
 \usepackage{amsmath,amssymb,amsthm}
@@ -41,6 +43,7 @@
 % Hiperveze i reference
 \usepackage[colorlinks=true,linkcolor=blue!70!black,citecolor=green!50!black,urlcolor=blue!70!black]{hyperref}
 \usepackage{cleveref}
+%\usepackage[unicode, pdfencoding=auto]{hyperref}
 
 % Tablice i liste
 \usepackage{booktabs}
@@ -268,7 +271,7 @@ Svako poglavlje popraćeno je Jupyter bilježnicama koje omogućuju interaktivno
 % DIO I: OSNOVE
 % ----------------------------------
 \part{SVJETOVI DEDUKTIVNE LOGIKE}
-
+\input{wittgenstein}
 
 % ----------------------------------
 % DODACI
