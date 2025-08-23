@@ -13,7 +13,7 @@
 % Postavljanje zadanih fontova na Latin Modern (moderna verzija)
 \setmainfont{Latin Modern Roman}
 \setsansfont{Latin Modern Sans}
-\setmonofont{Latin Modern Mono}
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
 
 % Matematika i simboli
 \usepackage{amsmath,amssymb,amsthm}
@@ -73,7 +73,7 @@
 \definecolor{warningbg}{RGB}{255,250,240}
 
 % ===================================
-% STILOVI ZA KOD
+% STILOVI ZA KOD (BREAKABLE VERSION)
 % ===================================
 
 % Definicija Python stila za listings
@@ -98,7 +98,7 @@
     captionpos=b
 }
 
-% Stilizirana kutija za Python kod
+% Stilizirana kutija za Python kod - BREAKABLE VERSION
 \newtcblisting{pythoncode}[1][]{
     listing engine=minted,
     minted language=python,
@@ -114,8 +114,25 @@
     listing only,
     left=5mm,
     enhanced,
+    breakable,  % Makes the box breakable across pages
     overlay={\begin{tcbclipinterior}\fill[pythonblue!20] (frame.south west) rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
     #1
+}
+
+% Breakable output box using tcolorbox
+\newtcolorbox{codeoutput}{
+    colback=gray!10,
+    colframe=gray!50,
+    breakable,
+    fonttitle=\bfseries,
+    title=Izlaz:,
+    before upper=\small\ttfamily,
+    sharp corners,
+    boxrule=1pt,
+    left=2mm,
+    right=2mm,
+    top=2mm,
+    bottom=2mm
 }
 
 % ===================================
@@ -215,9 +232,9 @@
     \centering
     \vspace*{2cm}
     
-    {\Huge\bfseries\color{pythonblue} LOGIKA KROZ PYTHON\par}
+    {\Huge\bfseries\color{pythonblue} LOGIKA U KODU\par}
     \vspace{1cm}
-    {\Large\itshape Od sudova do strojnog zaključivanja\par}
+    {\Large\itshape Elementi logike kroz programski jezik Python\par}
     
     \vspace{3cm}
     
@@ -233,14 +250,14 @@
     
     \vspace{3cm}
     
-    {\large\scshape Sveučilišni udžbenik\par}
+    {\large\scshape Priručnik za kolegij ,,Logika i programiranje''\par}
     \vspace{1cm}
-    {\large [Ime autora]\par}
+    {\large Davor Lauc\par}
     
     \vfill
     
-    {\large Sveučilište u Zagrebu\par}
-    {\large 2024\par}
+    {\large Filozofski Fakultet Sveučilišta u Zagrebu\par}
+    {\large 2025\par}
 \end{titlepage}
 
 % ----------------------------------
@@ -254,7 +271,8 @@
 \chapter*{Predgovor}
 \addcontentsline{toc}{chapter}{Predgovor}
 
-Ovaj udžbenik predstavlja moderan pristup učenju logike kroz programski jezik Python. Spajanjem apstraktnih logičkih koncepata s konkretnom implementacijom u kodu, studenti mogu neposredno eksperimentirati s logičkim sustavima i dublje razumjeti njihovu strukturu.
+Ovaj udžbenik predstavlja moderan pristup učenju logike kroz programski jezik Python, prvenstveno namijenjen polaznicima kolegija ,,Logika i programiranje'' ali i svima onima koji uče logiku ili programiranje, te žele iskoristiti transfer znanja iz jednog područja u drugi.
+Spajanjem apstraktnih logičkih koncepata s konkretnom implementacijom u kodu, studenti mogu neposredno eksperimentirati s logičkim sustavima i dublje razumjeti njihovu strukturu.
 
 Udžbenik koristi hrvatsku terminologiju prema standardnom pojmovniku logike, ali uvodi i međunarodne termine važne za rad u području računarstva i umjetne inteligencije.
 
@@ -272,6 +290,8 @@ Svako poglavlje popraćeno je Jupyter bilježnicama koje omogućuju interaktivno
 % ----------------------------------
 \part{SVJETOVI DEDUKTIVNE LOGIKE}
 \input{wittgenstein}
+\input{gentzen}
+\input{tarski}
 
 % ----------------------------------
 % DODACI
@@ -292,6 +312,5 @@ Svako poglavlje popraćeno je Jupyter bilježnicama koje omogućuju interaktivno
 \bibliographystyle{plain}
 % \bibliography{literatura}
 
-\printindex
 
 \end{document}
