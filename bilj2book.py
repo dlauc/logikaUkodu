@@ -2,8 +2,7 @@
 """
 Jupyter Notebook to LaTeX Chapter Converter
 Converts Jupyter notebooks to LaTeX format compatible with book templates.
-Modified to support page-breaking code blocks, proper numbered header handling,
-ASCII table conversion, and comprehensive Unicode symbol conversion to LaTeX.
+Enhanced to detect and properly render LaTeX content in code outputs.
 """
 
 import json
@@ -12,187 +11,401 @@ from pathlib import Path
 
 
 class JupyterToLatexConverter:
-    """Converts Jupyter notebooks to LaTeX chapters with breakable code blocks, tables, and symbol conversion."""
+    """Converts Jupyter notebooks to LaTeX chapters with intelligent LaTeX detection."""
 
     def __init__(self, notebook_path: str, output_path: str):
         """Initialize and convert notebook to LaTeX."""
         self.notebook_path = Path(notebook_path)
         self.output_path = Path(output_path)
 
-        # Comprehensive symbol mapping
+        # Comprehensive symbol mapping (without dollar signs)
         self.symbol_map = {
             # Logic symbols
-            '⊥': r'$\bot$',
-            '⊤': r'$\top$',
-            '¬': r'$\neg$',
-            '∧': r'$\land$',
-            '∨': r'$\lor$',
-            '→': r'$\rightarrow$',
-            '←': r'$\leftarrow$',
-            '↔': r'$\leftrightarrow$',
-            '⇒': r'$\Rightarrow$',
-            '⇐': r'$\Leftarrow$',
-            '⇔': r'$\Leftrightarrow$',
-            '∀': r'$\forall$',
-            '∃': r'$\exists$',
-            '∄': r'$\nexists$',
-            '⊢': r'$\vdash$',  # syntactic entailment
-            '⊨': r'$\models$',  # semantic entailment
-            '⊣': r'$\dashv$',
-            '⊩': r'$\Vdash$',
-            '⊬': r'$\nvdash$',
-            '⊭': r'$\nvDash$',
-            '⊮': r'$\nVdash$',
-            '⊯': r'$\nVDash$',
+            '⊥': r'\bot',
+            '⊤': r'\top',
+            '¬': r'\neg',
+            '∧': r'\land',
+            '∨': r'\lor',
+            '→': r'\rightarrow',
+            '←': r'\leftarrow',
+            '↔': r'\leftrightarrow',
+            '⇒': r'\Rightarrow',
+            '⇐': r'\Leftarrow',
+            '⇔': r'\Leftrightarrow',
+            '∀': r'\forall',
+            '∃': r'\exists',
+            '∄': r'\nexists',
+            '⊢': r'\vdash',
+            '⊨': r'\models',
+            '⊣': r'\dashv',
+            '⊩': r'\Vdash',
+            '⊬': r'\nvdash',
+            '⊭': r'\nvDash',
+            '⊮': r'\nVdash',
+            '⊯': r'\nVDash',
 
             # Set theory symbols
-            '∈': r'$\in$',
-            '∉': r'$\notin$',
-            '⊂': r'$\subset$',
-            '⊃': r'$\supset$',
-            '⊆': r'$\subseteq$',
-            '⊇': r'$\supseteq$',
-            '⊈': r'$\nsubseteq$',
-            '⊉': r'$\nsupseteq$',
-            '∪': r'$\cup$',
-            '∩': r'$\cap$',
-            '∅': r'$\emptyset$',
-            '⊕': r'$\oplus$',
-            '⊗': r'$\otimes$',
-            '⊖': r'$\ominus$',
-            '⊙': r'$\odot$',
+            '∈': r'\in',
+            '∉': r'\notin',
+            '⊂': r'\subset',
+            '⊃': r'\supset',
+            '⊆': r'\subseteq',
+            '⊇': r'\supseteq',
+            '⊈': r'\nsubseteq',
+            '⊉': r'\nsupseteq',
+            '∪': r'\cup',
+            '∩': r'\cap',
+            '∅': r'\emptyset',
+            '⊕': r'\oplus',
+            '⊗': r'\otimes',
+            '⊖': r'\ominus',
+            '⊙': r'\odot',
 
             # Mathematical operators
-            '×': r'$\times$',
-            '÷': r'$\div$',
-            '±': r'$\pm$',
-            '∓': r'$\mp$',
-            '≠': r'$\neq$',
-            '≡': r'$\equiv$',
-            '≢': r'$\not\equiv$',
-            '≈': r'$\approx$',
-            '≉': r'$\not\approx$',
-            '≤': r'$\leq$',
-            '≥': r'$\geq$',
-            '≪': r'$\ll$',
-            '≫': r'$\gg$',
-            '≺': r'$\prec$',
-            '≻': r'$\succ$',
-            '≼': r'$\preceq$',
-            '≽': r'$\succeq$',
-            '∝': r'$\propto$',
-            '∞': r'$\infty$',
-            '∂': r'$\partial$',
-            '∇': r'$\nabla$',
-            '∆': r'$\Delta$',
-            '∑': r'$\sum$',
-            '∏': r'$\prod$',
-            '∫': r'$\int$',
-            '∬': r'$\iint$',
-            '∭': r'$\iiint$',
-            '∮': r'$\oint$',
+            '×': r'\times',
+            '÷': r'\div',
+            '±': r'\pm',
+            '∓': r'\mp',
+            '≠': r'\neq',
+            '≡': r'\equiv',
+            '≢': r'\not\equiv',
+            '≈': r'\approx',
+            '≉': r'\not\approx',
+            '≤': r'\leq',
+            '≥': r'\geq',
+            '≪': r'\ll',
+            '≫': r'\gg',
+            '≺': r'\prec',
+            '≻': r'\succ',
+            '≼': r'\preceq',
+            '≽': r'\succeq',
+            '∝': r'\propto',
+            '∞': r'\infty',
+            '∂': r'\partial',
+            '∇': r'\nabla',
+            '∆': r'\Delta',
+            '∑': r'\sum',
+            '∏': r'\prod',
+            '∫': r'\int',
+            '∬': r'\iint',
+            '∭': r'\iiint',
+            '∮': r'\oint',
 
             # Arrows
-            '↑': r'$\uparrow$',
-            '↓': r'$\downarrow$',
-            '↕': r'$\updownarrow$',
-            '⇑': r'$\Uparrow$',
-            '⇓': r'$\Downarrow$',
-            '⇕': r'$\Updownarrow$',
-            '↦': r'$\mapsto$',
-            '↪': r'$\hookrightarrow$',
+            '↑': r'\uparrow',
+            '↓': r'\downarrow',
+            '↕': r'\updownarrow',
+            '⇑': r'\Uparrow',
+            '⇓': r'\Downarrow',
+            '⇕': r'\Updownarrow',
+            '↦': r'\mapsto',
+            '↪': r'\hookrightarrow',
 
-            # Greek letters (common ones)
-            'α': r'$\alpha$',
-            'β': r'$\beta$',
-            'γ': r'$\gamma$',
-            'δ': r'$\delta$',
-            'ε': r'$\varepsilon$',
-            'ζ': r'$\zeta$',
-            'η': r'$\eta$',
-            'θ': r'$\theta$',
-            'ι': r'$\iota$',
-            'κ': r'$\kappa$',
-            'λ': r'$\lambda$',
-            'μ': r'$\mu$',
-            'ν': r'$\nu$',
-            'ξ': r'$\xi$',
-            'π': r'$\pi$',
-            'ρ': r'$\rho$',
-            'σ': r'$\sigma$',
-            'τ': r'$\tau$',
-            'υ': r'$\upsilon$',
-            'φ': r'$\phi$',
-            'χ': r'$\chi$',
-            'ψ': r'$\psi$',
-            'ω': r'$\omega$',
-            'Γ': r'$\Gamma$',
-            'Δ': r'$\Delta$',
-            'Θ': r'$\Theta$',
-            'Λ': r'$\Lambda$',
-            'Ξ': r'$\Xi$',
-            'Π': r'$\Pi$',
-            'Σ': r'$\Sigma$',
-            'Φ': r'$\Phi$',
-            'Ψ': r'$\Psi$',
-            'Ω': r'$\Omega$',
+            # Greek letters
+            'α': r'\alpha',
+            'β': r'\beta',
+            'γ': r'\gamma',
+            'δ': r'\delta',
+            'ε': r'\varepsilon',
+            'ζ': r'\zeta',
+            'η': r'\eta',
+            'θ': r'\theta',
+            'ι': r'\iota',
+            'κ': r'\kappa',
+            'λ': r'\lambda',
+            'μ': r'\mu',
+            'ν': r'\nu',
+            'ξ': r'\xi',
+            'π': r'\pi',
+            'ρ': r'\rho',
+            'σ': r'\sigma',
+            'τ': r'\tau',
+            'υ': r'\upsilon',
+            'φ': r'\phi',
+            'χ': r'\chi',
+            'ψ': r'\psi',
+            'ω': r'\omega',
+            'Γ': r'\Gamma',
+            'Δ': r'\Delta',
+            'Θ': r'\Theta',
+            'Λ': r'\Lambda',
+            'Ξ': r'\Xi',
+            'Π': r'\Pi',
+            'Σ': r'\Sigma',
+            'Φ': r'\Phi',
+            'Ψ': r'\Psi',
+            'Ω': r'\Omega',
 
             # Other useful symbols
-            '•': r'$\bullet$',
-            '∘': r'$\circ$',
-            '°': r'$^\circ$',
-            '†': r'$\dagger$',
-            '‡': r'$\ddagger$',
-            '★': r'$\star$',
-            '♠': r'$\spadesuit$',
-            '♣': r'$\clubsuit$',
-            '♥': r'$\heartsuit$',
-            '♦': r'$\diamondsuit$',
-            '□': r'$\square$',
-            '■': r'$\blacksquare$',
-            '◊': r'$\lozenge$',
-            '○': r'$\bigcirc$',
-            '●': r'$\bullet$',
-            '⟨': r'$\langle$',
-            '⟩': r'$\rangle$',
-            '⌊': r'$\lfloor$',
-            '⌋': r'$\rfloor$',
-            '⌈': r'$\lceil$',
-            '⌉': r'$\rceil$',
-            '〈': r'$\langle$',
-            '〉': r'$\rangle$',
+            '•': r'\bullet',
+            '∘': r'\circ',
+            '°': r'^\circ',
+            '†': r'\dagger',
+            '‡': r'\ddagger',
+            '★': r'\star',
+            '□': r'\square',
+            '■': r'\blacksquare',
+            '◊': r'\lozenge',
+            '○': r'\bigcirc',
+            '●': r'\bullet',
+            '⟨': r'\langle',
+            '⟩': r'\rangle',
+            '⌊': r'\lfloor',
+            '⌋': r'\rfloor',
+            '⌈': r'\lceil',
+            '⌉': r'\rceil',
+            '〈': r'\langle',
+            '〉': r'\rangle',
         }
 
         self.convert()
 
-    def convert_symbols(self, text: str, in_math_mode: bool = False) -> str:
-        """Convert Unicode symbols to LaTeX equivalents.
+    def is_latex_content(self, text: str) -> bool:
+        """Check if text contains LaTeX commands that should be rendered."""
+        latex_indicators = [
+            r'\\begin\{prooftree\}',
+            r'\\begin\{equation',
+            r'\\begin\{align',
+            r'\\begin\{gather',
+            r'\\begin\{array',
+            r'\\begin\{matrix',
+            r'\\begin\{bmatrix',
+            r'\\begin\{pmatrix',
+            r'\\AxiomC',
+            r'\\UnaryInfC',
+            r'\\BinaryInfC',
+            r'\\TrinaryInfC',
+            r'\\RightLabel',
+            r'\\LeftLabel',
+            r'\\frac\{',
+            r'\\displaystyle',
+            r'\\[A-Z][a-z]+C\{',  # Catches inference commands
+        ]
 
-        Args:
-            text: The text to convert
-            in_math_mode: If True, don't wrap symbols in $ signs (already in math mode)
+        for pattern in latex_indicators:
+            if re.search(pattern, text):
+                return True
+
+        # Also check if it looks like a structured LaTeX example
+        if ('\\wedge' in text or '\\vee' in text or '\\neg' in text or
+                '\\rightarrow' in text or '\\vdash' in text or '\\models' in text):
+            if ('\\begin{' in text or '\\end{' in text):
+                return True
+
+        return False
+
+    def process_latex_output(self, text: str) -> str:
+        """Process output that contains LaTeX code."""
+        lines = text.split('\n')
+        result = []
+        in_latex_block = False
+        latex_buffer = []
+        header_lines = []
+
+        for line in lines:
+            # Check for header/separator lines
+            if re.match(r'^[=\-]{3,}$', line.strip()):
+                if latex_buffer:
+                    # Process accumulated LaTeX
+                    latex_content = '\n'.join(latex_buffer)
+                    result.append(self.convert_latex_content(latex_content))
+                    latex_buffer = []
+                    in_latex_block = False
+                continue
+
+            # Check for section headers (like "KONJUNKCIJA:")
+            if re.match(r'^[A-Z][A-Z\s]+:$', line.strip()) and not in_latex_block:
+                if latex_buffer:
+                    result.append(self.convert_latex_content('\n'.join(latex_buffer)))
+                    latex_buffer = []
+                result.append(f"\n\\textbf{{{line.strip()}}}\n")
+                continue
+
+            # Check for subsection headers (like "Uvođenje (∧I):")
+            if re.match(r'^[A-Z][a-zščćžđ]+.*\([^)]+\):$', line.strip()):
+                if latex_buffer:
+                    result.append(self.convert_latex_content('\n'.join(latex_buffer)))
+                    latex_buffer = []
+                # Convert symbols in the header
+                converted_line = self.convert_symbols_in_text(line.strip())
+                result.append(f"\n\\textit{{{converted_line}}}\n")
+                continue
+
+            # Detect LaTeX environment beginnings
+            if re.search(r'\\begin\{', line):
+                in_latex_block = True
+                latex_buffer.append(line)
+            elif re.search(r'\\end\{', line):
+                latex_buffer.append(line)
+                # Check if this ends a major environment
+                if re.search(r'\\end\{(prooftree|equation|align|gather|array|matrix)', line):
+                    # Process the complete LaTeX block
+                    latex_content = '\n'.join(latex_buffer)
+                    result.append(self.convert_latex_content(latex_content))
+                    latex_buffer = []
+                    in_latex_block = False
+            elif in_latex_block:
+                latex_buffer.append(line)
+            else:
+                # Regular text line - check if it needs symbol conversion
+                if line.strip():
+                    result.append(self.convert_symbols_in_text(line))
+                else:
+                    result.append(line)
+
+        # Process any remaining LaTeX buffer
+        if latex_buffer:
+            result.append(self.convert_latex_content('\n'.join(latex_buffer)))
+
+        return '\n'.join(result)
+
+    def convert_latex_content(self, text: str) -> str:
+        """Convert LaTeX content, handling Unicode symbols within it."""
+        # Replace Unicode symbols with LaTeX commands in the LaTeX code
+        for symbol, latex_cmd in self.symbol_map.items():
+            # In LaTeX environments, we don't need the $ signs
+            text = text.replace(symbol, latex_cmd)
+
+        # Clean up any redundant $ signs that might have been in the original
+        text = re.sub(r'\$\s*\$', '', text)
+
+        return text
+
+    def smart_math_wrap(self, text: str) -> str:
+        """
+        Intelligently wrap math symbols in $ signs, handling consecutive symbols
+        and avoiding double-wrapping.
         """
         if not text:
             return text
 
-        # If we're in math mode, create a version of the map without dollar signs
-        if in_math_mode:
-            for symbol, latex in self.symbol_map.items():
-                # Remove the dollar signs for math mode
-                latex_no_dollars = latex.replace('$', '')
-                text = text.replace(symbol, latex_no_dollars)
-        else:
-            # Regular replacement with dollar signs
-            for symbol, latex in self.symbol_map.items():
-                text = text.replace(symbol, latex)
+        # Don't process if this looks like LaTeX code
+        if self.is_latex_content(text):
+            return text
 
-        return text
+        # Track positions of all symbols
+        symbol_positions = []
+        for symbol in self.symbol_map:
+            pos = 0
+            while pos < len(text):
+                pos = text.find(symbol, pos)
+                if pos == -1:
+                    break
+                symbol_positions.append((pos, pos + len(symbol), symbol))
+                pos += len(symbol)
+
+        if not symbol_positions:
+            return text
+
+        # Sort by position
+        symbol_positions.sort(key=lambda x: x[0])
+
+        # Group consecutive symbols
+        groups = []
+        if symbol_positions:
+            current_group = [symbol_positions[0]]
+
+            for i in range(1, len(symbol_positions)):
+                prev_end = symbol_positions[i - 1][1]
+                curr_start = symbol_positions[i][0]
+
+                # Check if symbols are consecutive or have only spaces between them
+                between_text = text[prev_end:curr_start]
+                if between_text.strip() == '' and len(between_text) <= 3:
+                    current_group.append(symbol_positions[i])
+                else:
+                    groups.append(current_group)
+                    current_group = [symbol_positions[i]]
+
+            groups.append(current_group)
+
+        # Build result by replacing groups
+        result = []
+        last_pos = 0
+
+        for group in groups:
+            group_start = group[0][0]
+            group_end = group[-1][1]
+
+            # Add text before this group
+            result.append(text[last_pos:group_start])
+
+            # Convert the group
+            group_text = text[group_start:group_end]
+            for symbol, latex in self.symbol_map.items():
+                group_text = group_text.replace(symbol, latex)
+
+            # Wrap in math mode
+            result.append(f'${group_text}$')
+            last_pos = group_end
+
+        # Add remaining text
+        result.append(text[last_pos:])
+
+        return ''.join(result)
+
+    def convert_symbols_in_text(self, text: str) -> str:
+        """
+        Convert symbols in regular text, handling math mode intelligently.
+        """
+        # Don't process LaTeX environments
+        if self.is_latex_content(text):
+            return self.convert_latex_content(text)
+
+        # Split by existing math regions
+        parts = []
+        segments = []
+
+        # Find all math regions
+        math_patterns = [
+            (r'\$[^\$]+\$', 'inline'),  # $...$
+            (r'\$\$[^\$]+\$\$', 'display'),  # $$...$$
+            (r'\\\[[^\]]*\\\]', 'display'),  # \[...\]
+            (r'\\begin\{equation\}.*?\\end\{equation\}', 'equation'),
+            (r'\\begin\{align\}.*?\\end\{align\}', 'align'),
+            (r'\\begin\{gather\}.*?\\end\{gather\}', 'gather'),
+        ]
+
+        protected_regions = []
+        for pattern, mode in math_patterns:
+            for match in re.finditer(pattern, text, re.DOTALL):
+                protected_regions.append((match.start(), match.end()))
+
+        # Sort and merge overlapping regions
+        protected_regions.sort()
+        merged_regions = []
+        for start, end in protected_regions:
+            if merged_regions and start <= merged_regions[-1][1]:
+                merged_regions[-1] = (merged_regions[-1][0], max(end, merged_regions[-1][1]))
+            else:
+                merged_regions.append((start, end))
+
+        # Process text segments
+        result = []
+        last_pos = 0
+
+        for start, end in merged_regions:
+            # Process text before protected region
+            if start > last_pos:
+                segment = text[last_pos:start]
+                result.append(self.smart_math_wrap(segment))
+
+            # Keep protected region as-is
+            result.append(text[start:end])
+            last_pos = end
+
+        # Process remaining text
+        if last_pos < len(text):
+            segment = text[last_pos:]
+            result.append(self.smart_math_wrap(segment))
+
+        return ''.join(result)
 
     def clean_header(self, text: str) -> str:
-        """Clean header text by removing leading numbers like '1.' but preserving the rest."""
-        # Remove patterns like "1. " or "1.2. " from the beginning
+        """Clean header text by removing leading numbers."""
         cleaned = re.sub(r'^(\d+\.)+\s*', '', text.strip())
-        return cleaned.strip()
+        # Convert symbols in headers
+        return self.convert_symbols_in_text(cleaned)
 
     def detect_and_convert_table(self, text: str) -> str:
         """Detect ASCII tables and convert them to LaTeX format."""
@@ -201,9 +414,7 @@ class JupyterToLatexConverter:
         i = 0
 
         while i < len(lines):
-            # Check if this looks like the start of a table
             if self.is_table_start(lines, i):
-                # Extract and convert the table
                 table_latex, end_index = self.extract_and_convert_table(lines, i)
                 if table_latex:
                     result.append(table_latex)
@@ -220,13 +431,9 @@ class JupyterToLatexConverter:
         if start_index >= len(lines):
             return False
 
-        # Look for patterns that indicate a table
-        # Could be a line with pipes, or a separator line
         for i in range(start_index, min(start_index + 5, len(lines))):
             line = lines[i].strip()
-            # Check for table markers
             if '|' in line or re.match(r'^[=\-]+$', line):
-                # Look ahead to confirm it's a table
                 for j in range(i, min(i + 3, len(lines))):
                     if '|' in lines[j]:
                         return True
@@ -237,19 +444,14 @@ class JupyterToLatexConverter:
         table_lines = []
         end_index = start_index
 
-        # Find the table boundaries
         for i in range(start_index, len(lines)):
             line = lines[i].strip()
 
-            # Skip empty lines at the beginning
             if not line and not table_lines:
                 continue
 
-            # Check for table content or separators
             if '|' in line or re.match(r'^[=\-]+$', line) or (table_lines and not line):
                 if not line and table_lines:
-                    # Empty line after table content might indicate end
-                    # Check if there's more table content ahead
                     has_more = False
                     for j in range(i + 1, min(i + 3, len(lines))):
                         if '|' in lines[j] or re.match(r'^[=\-]+$', lines[j]):
@@ -261,7 +463,6 @@ class JupyterToLatexConverter:
                 table_lines.append(line)
                 end_index = i
             else:
-                # If we have table lines and hit non-table content, stop
                 if table_lines:
                     end_index = i - 1
                     break
@@ -269,29 +470,23 @@ class JupyterToLatexConverter:
         if not table_lines:
             return None, start_index
 
-        # Parse the table
         rows = []
         headers = None
 
         for line in table_lines:
             line = line.strip()
 
-            # Skip separator lines
-            if re.match(r'^[=]+$', line) or re.match(r'^[\-]+$', line):
+            if re.match(r'^[=\-]+$', line):
                 continue
 
-            # Parse data rows
             if '|' in line:
-                # Split by pipe and clean up
                 cells = [cell.strip() for cell in line.split('|')]
-                # Remove empty cells at the beginning and end
                 while cells and not cells[0]:
                     cells.pop(0)
                 while cells and not cells[-1]:
                     cells.pop()
 
                 if cells:
-                    # First row with cells is the header
                     if headers is None:
                         headers = cells
                     else:
@@ -300,31 +495,43 @@ class JupyterToLatexConverter:
         if not headers:
             return None, start_index
 
-        # Convert to LaTeX
         latex = self.format_latex_table(headers, rows)
         return latex, end_index
 
     def format_latex_table(self, headers, rows):
-        """Format a table as LaTeX."""
+        """Format a table as LaTeX with proper math mode handling."""
         num_cols = len(headers)
 
-        # Start table
         latex = "\\begin{table}[h!]\n"
         latex += "\\centering\n"
         latex += "\\begin{tabular}{" + "|c" * num_cols + "|}\n"
         latex += "\\hline\n"
 
-        # Add headers with symbol conversion
-        header_cells = [self.convert_symbols(h) for h in headers]
+        # Process headers with smart symbol conversion
+        header_cells = []
+        for h in headers:
+            if any(symbol in h for symbol in self.symbol_map):
+                converted = self.convert_symbols_for_table_cell(h)
+                header_cells.append(converted)
+            else:
+                header_cells.append(h)
+
         latex += " & ".join(header_cells) + " \\\\\n"
         latex += "\\hline\n"
 
-        # Add rows with symbol conversion
+        # Process rows
         for row in rows:
-            # Ensure row has the right number of cells
             while len(row) < num_cols:
                 row.append('')
-            row_cells = [self.convert_symbols(cell) for cell in row[:num_cols]]
+
+            row_cells = []
+            for cell in row[:num_cols]:
+                if any(symbol in cell for symbol in self.symbol_map):
+                    converted = self.convert_symbols_for_table_cell(cell)
+                    row_cells.append(converted)
+                else:
+                    row_cells.append(cell)
+
             latex += " & ".join(row_cells) + " \\\\\n"
 
         latex += "\\hline\n"
@@ -333,13 +540,28 @@ class JupyterToLatexConverter:
 
         return latex
 
+    def convert_symbols_for_table_cell(self, text: str) -> str:
+        """Convert symbols in a table cell, grouping adjacent symbols."""
+        if not text:
+            return text
+
+        # First replace all symbols with their LaTeX equivalents
+        for symbol, latex in self.symbol_map.items():
+            text = text.replace(symbol, f'SYMBOL_{latex}_SYMBOL')
+
+        # Now wrap in math mode
+        text = re.sub(r'SYMBOL_(.*?)_SYMBOL', r'$\1$', text)
+
+        # Merge adjacent math modes
+        text = re.sub(r'\$\s*\$', ' ', text)
+
+        return text
+
     def convert(self):
         """Main conversion method."""
-        # Load notebook
         with open(self.notebook_path, 'r', encoding='utf-8') as f:
             notebook = json.load(f)
 
-        # Process content
         latex_content = []
         chapter_title = None
 
@@ -347,7 +569,6 @@ class JupyterToLatexConverter:
             if cell['cell_type'] == 'markdown':
                 content = self.process_markdown(cell)
                 if content:
-                    # Extract first # as chapter title
                     if not chapter_title and content.startswith('\\section{'):
                         title_match = re.match(r'\\section\{(.+?)\}', content)
                         if title_match:
@@ -362,13 +583,11 @@ class JupyterToLatexConverter:
                 if content:
                     latex_content.append(content)
 
-        # Build final LaTeX
         output = f"% Generated from {self.notebook_path.name}\n\n"
         if chapter_title:
             output += f"\\chapter{{{chapter_title}}}\n\n"
         output += '\n\n'.join(latex_content)
 
-        # Save to file
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.output_path, 'w', encoding='utf-8') as f:
             f.write(output)
@@ -381,15 +600,14 @@ class JupyterToLatexConverter:
         if not text.strip():
             return ''
 
-        # First, detect and convert tables (they handle symbols internally)
+        # Check if this is LaTeX content that should be rendered directly
+        if self.is_latex_content(text):
+            return self.process_latex_output(text)
+
+        # First detect and convert tables
         text = self.detect_and_convert_table(text)
 
-        # Convert symbols in the entire text (but preserve existing LaTeX math)
-        # We need to be careful not to convert symbols inside existing $ ... $ or \[ ... \]
-        text = self.convert_symbols_preserve_math(text)
-
-        # Process headers with number cleaning
-        # Using lambda functions to clean the captured header text
+        # Process headers
         text = re.sub(
             r'^# (.+)$',
             lambda m: f'\\section{{{self.clean_header(m.group(1))}}}',
@@ -415,14 +633,26 @@ class JupyterToLatexConverter:
             flags=re.MULTILINE
         )
 
-        # Text formatting
-        text = re.sub(r'\*\*(.+?)\*\*', r'\\textbf{\1}', text)
-        text = re.sub(r'\*(.+?)\*', r'\\textit{\1}', text)
+        # Process inline code BEFORE converting symbols
         text = re.sub(r'`([^`]+)`', r'\\pyinline{\1}', text)
 
-        # Math (handle display math first, then inline)
-        text = re.sub(r'\$\$(.+?)\$\$', r'\\[\1\\]', text, flags=re.DOTALL)
-        text = re.sub(r'(?<!\$)\$(?!\$)([^\$]+)\$(?!\$)', r'$\1$', text)
+        # Process math environments BEFORE symbol conversion
+        # Display math
+        text = re.sub(r'\$\$(.+?)\$\$',
+                      lambda m: '\\[' + self.convert_math_content(m.group(1)) + '\\]',
+                      text, flags=re.DOTALL)
+
+        # Inline math
+        text = re.sub(r'(?<!\$)\$(?!\$)([^\$]+)\$(?!\$)',
+                      lambda m: '$' + self.convert_math_content(m.group(1)) + '$',
+                      text)
+
+        # Now convert symbols in the remaining text
+        text = self.convert_symbols_in_text(text)
+
+        # Text formatting (do after symbol conversion to avoid issues)
+        text = re.sub(r'\*\*(.+?)\*\*', r'\\textbf{\1}', text)
+        text = re.sub(r'(?<!\*)\*([^\*]+)\*(?!\*)', r'\\textit{\1}', text)
 
         # Quotes
         text = re.sub(r'^> (.+)$', lambda m: self.format_quote(m.group(1)), text, flags=re.MULTILINE)
@@ -430,60 +660,20 @@ class JupyterToLatexConverter:
         # Lists
         text = self.process_lists(text)
 
-        # Links (convert markdown links to LaTeX)
+        # Links
         text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'\\href{\2}{\1}', text)
 
         return text
 
-    def convert_symbols_preserve_math(self, text: str) -> str:
-        """Convert symbols while preserving existing math environments."""
-        # Split text by math delimiters
-        parts = []
-        current_pos = 0
-
-        # Find all math regions (both $...$ and \[...\])
-        math_regions = []
-
-        # Find inline math $...$
-        for match in re.finditer(r'\$[^\$]+\$', text):
-            math_regions.append((match.start(), match.end(), 'inline'))
-
-        # Find display math \[...\]
-        for match in re.finditer(r'\\\[.*?\\\]', text, re.DOTALL):
-            math_regions.append((match.start(), match.end(), 'display'))
-
-        # Find display math $$...$$
-        for match in re.finditer(r'\$\$.*?\$\$', text, re.DOTALL):
-            math_regions.append((match.start(), match.end(), 'display'))
-
-        # Sort regions by start position
-        math_regions.sort(key=lambda x: x[0])
-
-        # Process text, converting symbols outside math regions
-        result = []
-        last_end = 0
-
-        for start, end, math_type in math_regions:
-            # Convert symbols in text before this math region
-            if start > last_end:
-                before_math = text[last_end:start]
-                result.append(self.convert_symbols(before_math, in_math_mode=False))
-
-            # Keep math region as-is (it should already have proper LaTeX)
-            result.append(text[start:end])
-            last_end = end
-
-        # Convert symbols in remaining text after last math region
-        if last_end < len(text):
-            remaining = text[last_end:]
-            result.append(self.convert_symbols(remaining, in_math_mode=False))
-
-        return ''.join(result)
+    def convert_math_content(self, math_text: str) -> str:
+        """Convert symbols within math mode (no dollar signs needed)."""
+        for symbol, latex in self.symbol_map.items():
+            math_text = math_text.replace(symbol, latex)
+        return math_text
 
     def format_quote(self, text):
-        """Format block quote."""
-        # Convert symbols in quote text
-        text = self.convert_symbols(text)
+        """Format block quote with proper symbol handling."""
+        text = self.convert_symbols_in_text(text)
 
         if ' - ' in text:
             parts = text.split(' - ', 1)
@@ -491,26 +681,23 @@ class JupyterToLatexConverter:
         return f'\\begin{{quote}}\n\\textit{{{text}}}\n\\end{{quote}}'
 
     def process_lists(self, text):
-        """Convert markdown lists to LaTeX."""
+        """Convert markdown lists to LaTeX with proper symbol handling."""
         lines = text.split('\n')
         result = []
         in_list = False
         list_type = None
-        indent_stack = []  # Track nested lists
+        indent_stack = []
 
         for line in lines:
-            # Check indentation level
             indent = len(line) - len(line.lstrip())
 
-            # Check for unordered list items
             unordered_match = re.match(r'^(\s*)[-*+] (.+)$', line)
             ordered_match = re.match(r'^(\s*)\d+\. (.+)$', line)
 
             if unordered_match:
                 current_indent = len(unordered_match.group(1))
                 item_content = unordered_match.group(2)
-                # Convert symbols in list item
-                item_content = self.convert_symbols(item_content)
+                item_content = self.convert_symbols_in_text(item_content)
 
                 if not in_list:
                     result.append('\\begin{itemize}')
@@ -518,7 +705,6 @@ class JupyterToLatexConverter:
                     list_type = 'itemize'
                     indent_stack = [current_indent]
 
-                # Handle nested lists
                 if current_indent > indent_stack[-1]:
                     result.append('\\begin{itemize}')
                     indent_stack.append(current_indent)
@@ -532,8 +718,7 @@ class JupyterToLatexConverter:
             elif ordered_match:
                 current_indent = len(ordered_match.group(1))
                 item_content = ordered_match.group(2)
-                # Convert symbols in list item
-                item_content = self.convert_symbols(item_content)
+                item_content = self.convert_symbols_in_text(item_content)
 
                 if not in_list:
                     result.append('\\begin{enumerate}')
@@ -541,7 +726,6 @@ class JupyterToLatexConverter:
                     list_type = 'enumerate'
                     indent_stack = [current_indent]
 
-                # Handle nested lists
                 if current_indent > indent_stack[-1]:
                     result.append('\\begin{enumerate}')
                     indent_stack.append(current_indent)
@@ -553,14 +737,11 @@ class JupyterToLatexConverter:
                 result.append(f'\\item {item_content}')
 
             else:
-                # Check if it's a continuation of a list item (indented text)
                 if in_list and line.strip() and indent > 0:
-                    result.append(line.strip())
+                    result.append(self.convert_symbols_in_text(line.strip()))
                 elif in_list and line.strip() == '':
-                    # Empty line might continue list
                     result.append('')
                 elif in_list:
-                    # End all nested lists
                     while indent_stack:
                         if list_type == 'enumerate':
                             result.append('\\end{enumerate}')
@@ -573,7 +754,6 @@ class JupyterToLatexConverter:
                 else:
                     result.append(line)
 
-        # Close any remaining lists
         if in_list:
             while indent_stack:
                 if list_type == 'enumerate':
@@ -585,41 +765,37 @@ class JupyterToLatexConverter:
         return '\n'.join(result)
 
     def process_code(self, cell):
-        """Convert code cell to LaTeX with breakable blocks."""
+        """Convert code cell to LaTeX."""
         source = ''.join(cell['source']) if isinstance(cell['source'], list) else cell['source']
         if not source.strip():
             return ''
 
-        # Convert any symbols in code comments (but be careful with string literals)
-        source = self.convert_symbols_in_code(source)
-
-        # Start with code block (pythoncode environment is already breakable)
+        # Don't convert symbols in actual code
         latex = "\\begin{pythoncode}\n"
         latex += source.strip()
         latex += "\n\\end{pythoncode}"
 
-        # Add output if present using tcolorbox (breakable)
         outputs = self.extract_output(cell)
         if outputs:
-            # Check if output contains a table
-            if self.looks_like_table_output(outputs):
-                # Convert the table in the output
+            # Check if output contains LaTeX content
+            if self.is_latex_content(outputs):
+                # Process as LaTeX content
+                processed_output = self.process_latex_output(outputs)
+                latex += "\n" + processed_output
+            elif self.looks_like_table_output(outputs):
+                # Try to convert as table
                 converted_output = self.detect_and_convert_table(outputs)
-                # If a table was found and converted, use it directly
                 if '\\begin{table}' in converted_output:
                     latex += "\n" + converted_output
                 else:
-                    # Otherwise, use regular output formatting with symbol conversion
-                    outputs = self.convert_symbols(outputs)
+                    # Regular verbatim output
                     latex += "\n\\begin{codeoutput}\n"
                     latex += "\\begin{verbatim}\n"
                     latex += outputs
                     latex += "\n\\end{verbatim}\n"
                     latex += "\\end{codeoutput}"
             else:
-                # Convert symbols in output
-                outputs = self.convert_symbols(outputs)
-                # Use tcolorbox-based codeoutput environment instead of mdframed
+                # Regular output - keep in verbatim
                 latex += "\n\\begin{codeoutput}\n"
                 latex += "\\begin{verbatim}\n"
                 latex += outputs
@@ -628,36 +804,11 @@ class JupyterToLatexConverter:
 
         return latex
 
-    def convert_symbols_in_code(self, code: str) -> str:
-        """Convert symbols in code, being careful with string literals and comments."""
-        lines = code.split('\n')
-        result = []
-
-        for line in lines:
-            # Only convert symbols in comments (after #)
-            if '#' in line:
-                code_part, comment_part = line.split('#', 1)
-                comment_part = self.convert_symbols(comment_part)
-                result.append(code_part + '#' + comment_part)
-            else:
-                # For now, don't convert symbols in actual code to avoid breaking string literals
-                result.append(line)
-
-        return '\n'.join(result)
-
     def looks_like_table_output(self, text):
         """Check if the output looks like a table."""
         lines = text.split('\n')
-        pipe_count = 0
-        separator_count = 0
-
-        for line in lines:
-            if '|' in line:
-                pipe_count += 1
-            if re.match(r'^[=\-]+$', line.strip()):
-                separator_count += 1
-
-        # If we have multiple lines with pipes and some separators, it's likely a table
+        pipe_count = sum(1 for line in lines if '|' in line)
+        separator_count = sum(1 for line in lines if re.match(r'^[=\-]+$', line.strip()))
         return pipe_count >= 2 and separator_count >= 1
 
     def extract_output(self, cell):
@@ -675,18 +826,17 @@ class JupyterToLatexConverter:
                     text = output['data']['text/plain']
                     output_lines.extend(text if isinstance(text, list) else [text])
             elif output.get('output_type') == 'error':
-                # Include error outputs as well
                 if 'traceback' in output:
-                    # Traceback is usually a list of strings with ANSI codes
                     for line in output['traceback']:
-                        # Remove ANSI escape codes
                         clean_line = re.sub(r'\x1b\[[0-9;]*m', '', line)
                         output_lines.append(clean_line)
 
         return ''.join(output_lines).strip()
+
 
 if __name__ == '__main__':
     # Convert the notebook
     JupyterToLatexConverter('biljeznice/wittgenstein.ipynb', 'knjiga/wittgenstein.tex')
     JupyterToLatexConverter('biljeznice/gentzen.ipynb', 'knjiga/gentzen.tex')
     JupyterToLatexConverter('biljeznice/tarski.ipynb', 'knjiga/tarski.tex')
+    JupyterToLatexConverter('biljeznice/turing.ipynb', 'knjiga/turing.tex')
