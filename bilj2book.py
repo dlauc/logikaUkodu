@@ -156,6 +156,36 @@ class JupyterToLatexConverter:
             '⌉': r'\rceil',
             '〈': r'\langle',
             '〉': r'\rangle',
+
+            # Hebrew letters (for set theory)
+            'ℵ': r'\aleph',
+            'ב': r'\beth',
+            'ג': r'\gimel',
+            'ד': r'\daleth',
+
+            # Subscript numbers (commonly used with aleph)
+            '₀': r'_0',
+            '₁': r'_1',
+            '₂': r'_2',
+            '₃': r'_3',
+            '₄': r'_4',
+            '₅': r'_5',
+            '₆': r'_6',
+            '₇': r'_7',
+            '₈': r'_8',
+            '₉': r'_9',
+
+            # Superscript numbers
+            '⁰': r'^0',
+            '¹': r'^1',
+            '²': r'^2',
+            '³': r'^3',
+            '⁴': r'^4',
+            '⁵': r'^5',
+            '⁶': r'^6',
+            '⁷': r'^7',
+            '⁸': r'^8',
+            '⁹': r'^9',
         }
 
         self.convert()
@@ -194,13 +224,28 @@ class JupyterToLatexConverter:
 
         return False
 
+    def is_math_expression(self, text: str) -> bool:
+        """Check if text contains math expressions (inline or display)."""
+        # Check for inline math $...$
+        if re.search(r'\$[^\$]+\$', text):
+            return True
+        # Check for display math $$...$$
+        if re.search(r'\$\$[^\$]+\$\$', text):
+            return True
+        # Check for LaTeX math environments
+        if re.search(r'\\\[.*?\\\]', text, re.DOTALL):
+            return True
+        # Check for LaTeX commands that typically appear in math
+        if re.search(r'\\(left|right|big|Big|bigg|Bigg)?\|', text):
+            return True
+        return False
+
     def process_latex_output(self, text: str) -> str:
         """Process output that contains LaTeX code."""
         lines = text.split('\n')
         result = []
         in_latex_block = False
         latex_buffer = []
-        header_lines = []
 
         for line in lines:
             # Check for header/separator lines
@@ -352,10 +397,6 @@ class JupyterToLatexConverter:
         if self.is_latex_content(text):
             return self.convert_latex_content(text)
 
-        # Split by existing math regions
-        parts = []
-        segments = []
-
         # Find all math regions
         math_patterns = [
             (r'\$[^\$]+\$', 'inline'),  # $...$
@@ -402,13 +443,36 @@ class JupyterToLatexConverter:
         return ''.join(result)
 
     def clean_header(self, text: str) -> str:
-        """Clean header text by removing leading numbers."""
+        """Clean header text by removing leading numbers and converting symbols."""
+        # Remove leading numbers like "1.2.3 "
         cleaned = re.sub(r'^(\d+\.)+\s*', '', text.strip())
-        # Convert symbols in headers
-        return self.convert_symbols_in_text(cleaned)
+
+        # Process display math first ($$...$$)
+        cleaned = re.sub(r'\$\$(.+?)\$\$',
+                         lambda m: '\\[' + self.convert_math_content(m.group(1)) + '\\]',
+                         cleaned, flags=re.DOTALL)
+
+        # Process inline math - preserve the $ signs and convert symbols inside
+        cleaned = re.sub(r'(?<!\$)\$(?!\$)([^\$]+?)\$(?!\$)',
+                         lambda m: '$' + self.convert_math_content(m.group(1)) + '$',
+                         cleaned)
+
+        # Process LaTeX environments like \[...\]
+        cleaned = re.sub(r'\\\[(.+?)\\\]',
+                         lambda m: '\\[' + self.convert_math_content(m.group(1)) + '\\]',
+                         cleaned, flags=re.DOTALL)
+
+        # Then convert any remaining loose symbols that aren't in math mode
+        cleaned = self.convert_symbols_in_text(cleaned)
+
+        return cleaned
 
     def detect_and_convert_table(self, text: str) -> str:
         """Detect ASCII tables and convert them to LaTeX format."""
+        # First check if this text contains math expressions that shouldn't be treated as tables
+        if self.is_math_expression(text):
+            return text
+
         lines = text.split('\n')
         result = []
         i = 0
@@ -431,12 +495,34 @@ class JupyterToLatexConverter:
         if start_index >= len(lines):
             return False
 
+        # Look for table patterns but exclude math expressions
         for i in range(start_index, min(start_index + 5, len(lines))):
             line = lines[i].strip()
-            if '|' in line or re.match(r'^[=\-]+$', line):
-                for j in range(i, min(i + 3, len(lines))):
-                    if '|' in lines[j]:
+
+            # Skip if this line is in a math expression
+            if self.is_math_expression(line):
+                continue
+
+            # Look for table indicators: multiple pipes separating content
+            if line.count('|') >= 2:  # At least 2 pipes suggest table structure
+                # Check if pipes are separating actual cells (not within math)
+                # Remove math expressions temporarily to check structure
+                temp_line = re.sub(r'\$[^\$]+\$', '', line)
+                temp_line = re.sub(r'\\\|', '', temp_line)  # Remove LaTeX \|
+
+                if temp_line.count('|') >= 2:
+                    # This looks like a real table
+                    for j in range(i, min(i + 3, len(lines))):
+                        if '|' in lines[j] and not self.is_math_expression(lines[j]):
+                            return True
+
+            # Check for separator lines that often accompany tables
+            if re.match(r'^[=\-]{3,}$', line):
+                # Check if there are pipes nearby
+                for j in range(max(0, i - 2), min(len(lines), i + 3)):
+                    if j != i and '|' in lines[j] and not self.is_math_expression(lines[j]):
                         return True
+
         return False
 
     def extract_and_convert_table(self, lines, start_index):
@@ -447,14 +533,30 @@ class JupyterToLatexConverter:
         for i in range(start_index, len(lines)):
             line = lines[i].strip()
 
+            # Skip if this is a math expression
+            if self.is_math_expression(line):
+                if table_lines:
+                    # We've already started a table, this might be the end
+                    end_index = i - 1
+                    break
+                else:
+                    # Haven't started a table yet, skip this line
+                    continue
+
             if not line and not table_lines:
                 continue
 
-            if '|' in line or re.match(r'^[=\-]+$', line) or (table_lines and not line):
+            # Check if this line is part of a table
+            temp_line = re.sub(r'\$[^\$]+\$', '', line)
+            temp_line = re.sub(r'\\\|', '', temp_line)
+
+            if temp_line.count('|') >= 2 or re.match(r'^[=\-]+$', line) or (table_lines and not line):
                 if not line and table_lines:
                     has_more = False
                     for j in range(i + 1, min(i + 3, len(lines))):
-                        if '|' in lines[j] or re.match(r'^[=\-]+$', lines[j]):
+                        temp_j = re.sub(r'\$[^\$]+\$', '', lines[j])
+                        temp_j = re.sub(r'\\\|', '', temp_j)
+                        if temp_j.count('|') >= 2 or re.match(r'^[=\-]+$', lines[j]):
                             has_more = True
                             break
                     if not has_more:
@@ -557,6 +659,18 @@ class JupyterToLatexConverter:
 
         return text
 
+    def convert_math_content(self, math_text: str) -> str:
+        """
+        Convert symbols within math mode (no dollar signs needed).
+
+        Example:
+            Input: "ℵ₀" (inside $...$ from source)
+            Output: "\aleph_0"
+        """
+        for symbol, latex in self.symbol_map.items():
+            math_text = math_text.replace(symbol, latex)
+        return math_text
+
     def convert(self):
         """Main conversion method."""
         with open(self.notebook_path, 'r', encoding='utf-8') as f:
@@ -569,14 +683,13 @@ class JupyterToLatexConverter:
             if cell['cell_type'] == 'markdown':
                 content = self.process_markdown(cell)
                 if content:
-                    if not chapter_title and content.startswith('\\section{'):
-                        title_match = re.match(r'\\section\{(.+?)\}', content)
+                    if not chapter_title:
+                        # Look for a section header to use as the chapter title
+                        title_match = re.search(r'\\section\{(.+?)\}', content)
                         if title_match:
                             chapter_title = title_match.group(1)
-                            content = content[len(title_match.group(0)):].strip()
 
-                    if content:
-                        latex_content.append(content)
+                    latex_content.append(content)
 
             elif cell['cell_type'] == 'code':
                 content = self.process_code(cell)
@@ -602,12 +715,9 @@ class JupyterToLatexConverter:
 
         # Check if this is LaTeX content that should be rendered directly
         if self.is_latex_content(text):
-            return self.process_latex_output(text)
+            text = self.process_latex_output(text)
 
-        # First detect and convert tables
-        text = self.detect_and_convert_table(text)
-
-        # Process headers
+        # Process headers FIRST (clean_header will handle math expressions inside)
         text = re.sub(
             r'^# (.+)$',
             lambda m: f'\\section{{{self.clean_header(m.group(1))}}}',
@@ -637,17 +747,20 @@ class JupyterToLatexConverter:
         text = re.sub(r'`([^`]+)`', r'\\pyinline{\1}', text)
 
         # Process math environments BEFORE symbol conversion
-        # Display math
+        # Display math - convert symbols inside
         text = re.sub(r'\$\$(.+?)\$\$',
                       lambda m: '\\[' + self.convert_math_content(m.group(1)) + '\\]',
                       text, flags=re.DOTALL)
 
-        # Inline math
-        text = re.sub(r'(?<!\$)\$(?!\$)([^\$]+)\$(?!\$)',
+        # Inline math - preserve the $ signs and convert symbols inside
+        text = re.sub(r'(?<!\$)\$(?!\$)([^\$]+?)\$(?!\$)',
                       lambda m: '$' + self.convert_math_content(m.group(1)) + '$',
                       text)
 
-        # Now convert symbols in the remaining text
+        # NOW detect and convert tables (after math has been processed)
+        text = self.detect_and_convert_table(text)
+
+        # Now convert symbols in the remaining text (this will skip already processed math)
         text = self.convert_symbols_in_text(text)
 
         # Text formatting (do after symbol conversion to avoid issues)
@@ -664,12 +777,6 @@ class JupyterToLatexConverter:
         text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'\\href{\2}{\1}', text)
 
         return text
-
-    def convert_math_content(self, math_text: str) -> str:
-        """Convert symbols within math mode (no dollar signs needed)."""
-        for symbol, latex in self.symbol_map.items():
-            math_text = math_text.replace(symbol, latex)
-        return math_text
 
     def format_quote(self, text):
         """Format block quote with proper symbol handling."""
@@ -806,10 +913,25 @@ class JupyterToLatexConverter:
 
     def looks_like_table_output(self, text):
         """Check if the output looks like a table."""
+        # Don't treat math expressions as tables
+        if self.is_math_expression(text):
+            return False
+
         lines = text.split('\n')
-        pipe_count = sum(1 for line in lines if '|' in line)
+
+        # Count actual table structure indicators
+        real_pipe_count = 0
+        for line in lines:
+            # Remove math expressions to check for actual table pipes
+            temp_line = re.sub(r'\$[^\$]+\$', '', line)
+            temp_line = re.sub(r'\\\|', '', temp_line)
+            if temp_line.count('|') >= 2:
+                real_pipe_count += 1
+
         separator_count = sum(1 for line in lines if re.match(r'^[=\-]+$', line.strip()))
-        return pipe_count >= 2 and separator_count >= 1
+
+        # Need at least 2 lines with multiple pipes and at least one separator
+        return real_pipe_count >= 2 and separator_count >= 1
 
     def extract_output(self, cell):
         """Extract text output from code cell."""
@@ -835,8 +957,11 @@ class JupyterToLatexConverter:
 
 
 if __name__ == '__main__':
-    # Convert the notebook
+    # Convert the notebooks
     JupyterToLatexConverter('biljeznice/wittgenstein.ipynb', 'knjiga/wittgenstein.tex')
     JupyterToLatexConverter('biljeznice/gentzen.ipynb', 'knjiga/gentzen.tex')
     JupyterToLatexConverter('biljeznice/tarski.ipynb', 'knjiga/tarski.tex')
     JupyterToLatexConverter('biljeznice/turing.ipynb', 'knjiga/turing.tex')
+    JupyterToLatexConverter('biljeznice/cantor.ipynb', 'knjiga/cantor.tex')
+    JupyterToLatexConverter('biljeznice/pascal.ipynb', 'knjiga/pascal.tex')
+    JupyterToLatexConverter('biljeznice/bayes.ipynb', 'knjiga/bayes.tex')
