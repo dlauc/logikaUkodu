@@ -1,0 +1,391 @@
+
+\chapter{Uvod u Python za studente filozofije i ostalih ne-tehničkih grupa)}
+\label{chap:Uvod u Pzthon}
+
+\section{Zašto bi se filozof zanimao za programiranje?}
+
+Na prvi pogled, svijet filozofije i svijet programiranja mogu se činiti kao dva potpuno odvojena svemira. Jedan se bavi vječnim pitanjima o smislu, postojanju i vrijednostima, dok se drugi bavi preciznim uputama za strojeve. Međutim, ispod površine, ova dva svijeta dijele duboke i iznenađujuće veze. Logika, temeljni alat filozofske analize, ujedno je i srce svakog računalnog programa. Način na koji strukturiramo argumente, definiramo pojmove i izvodimo zaključke u filozofiji ima svoj odraz u načinu na koji pišemo kod.
+
+Učenje programskog jezika \pyinline{Python}, stoga, za studenta filozofije nije samo stjecanje tehničke vještine, već i prilika za istraživanje poznatih koncepata iz nove perspektive. Kroz \pyinline{Python}, apstraktni pojmovi poput varijabli, uvjeta i petlji postaju konkretni alati s kojima možete raditi, eksperimentirati i stvarati.
+
+Ovo poglavlje je osmišljeno kao blagi uvod u \pyinline{Python}, posebno prilagođen studentima humanističkih i društvenih znanosti. Nećemo se baviti složenim matematičkim problemima niti dubokim tehničkim detaljima. Umjesto toga, fokusirat ćemo se na osnove jezika, koristeći primjere koji su vam bliski: analizu teksta, rad s riječima i rečenicama, te istraživanje ideja kroz kod. Koristit ćemo se \textbf{Jupyter bilježnicama}, interaktivnim okruženjem koje omogućuje pisanje koda, teksta i vizualizacija na jednom mjestu, čineći učenje intuitivnim i zabavnim.
+
+Dok budete prolazili kroz ovo poglavlje, potičem vas da ne gledate na kod samo kao na niz naredbi, već kao na novi način izražavanja i strukturiranja misli. Možda ćete otkriti da vam učenje programiranja može pomoći da postanete precizniji u svom filozofskom promišljanju, jasniji u svom izražavanju i kreativniji u svom pristupu problemima. Dobrodošli u svijet \pyinline{Python}a!
+
+\section{Osnovni pojmovi: Varijable, tipovi podataka i izrazi}
+\label{sec:osnovni_pojmovi}
+
+\subsection{Varijable: Imenovanje ideja}
+
+U filozofiji, često koristimo simbole ili nazive kako bismo predstavili složene ideje. Na primjer, u logici, slovo \logsud{P} može predstavljati propoziciju "Svi ljudi su smrtni". Na sličan način, u \pyinline{Python}u koristimo \textbf{varijable} kao imenovane spremnike za pohranu podataka.
+
+\begin{definicijaokvir}
+    \textbf{Varijabla} je imenovani prostor u memoriji koji služi za pohranu vrijednosti. Ime varijable (identifikator) koristimo kako bismo pristupili pohranjenoj vrijednosti.
+\end{definicijaokvir}
+
+Varijablu možete zamisliti kao oznaku koju pridružujete nekoj vrijednosti. Operator dodjele, znak jednakosti (\pyinline{=}), koristi se za dodjeljivanje vrijednosti varijabli.
+
+\begin{primjerokvir}
+    Dodjeljivanje vrijednosti varijablama.
+    \begin{pythoncode}
+pozdrav = "Zdravo, svijete!"
+godina_rodenja_kanta = 1724
+pi_priblizno = 3.14159
+    \end{pythoncode}
+    U ovom primjeru, \pyinline{pozdrav}, \pyinline{godina_rodenja_kanta} i \pyinline{pi_priblizno} su nazivi varijabli. Jednom kada definiramo varijablu, možemo je koristiti u daljnjem kodu, na primjer za ispis njezine vrijednosti pomoću ugrađene funkcije \pyinline{print()}.
+    \begin{pythoncode}
+print(pozdrav)
+print(godina_rodenja_kanta)
+    \end{pythoncode}
+    \begin{codeoutput}
+Zdravo, svijete!
+1724
+    \end{codeoutput}
+\end{primjerokvir}
+
+
+\subsection{Tipovi podataka: Različite vrste informacija}
+
+U filozofiji, razlikujemo različite vrste pojmova: konkretne, apstraktne, pojedinačne, opće. Slično tome, u \pyinline{Python}u, svaka vrijednost pripada određenom \textbf{tipu podataka}. Osnovni tipovi podataka koje ćemo za početak koristiti su:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{String (\pyinline{str}):} Niz znakova, odnosno tekstualni podaci. Stringovi se uvijek pišu unutar navodnika (jednostrukih \pyinline{''} ili dvostrukih \pyinline{""}). Primjeri: \pyinline{"Sokrat"}, \pyinline{'Platonova Država'}.
+    \item \textbf{Integer (\pyinline{int}):} Cijeli brojevi, bez decimalnog dijela. Primjeri: \pyinline{42}, \pyinline{-399}, \pyinline{2025}.
+    \item \textbf{Float (\pyinline{float}):} Brojevi s pomičnim zarezom (decimalni brojevi). Primjeri: \pyinline{3.14}, \pyinline{9.81}, \pyinline{-0.5}.
+    \item \textbf{Boolean (\pyinline{bool}):} Logička ili istinitosna vrijednost. Može imati samo dvije vrijednosti: \pyinline{True} (istina) ili \pyinline{False} (laž).
+\end{itemize}
+
+\pyinline{Python} je dinamički tipiziran jezik, što znači da ne moramo unaprijed deklarirati tip varijable. Interpretator automatski prepoznaje tip podatka kada dodijelimo vrijednost. Tip varijable možemo provjeriti pomoću ugrađene funkcije \pyinline{type()}.
+
+\begin{primjerokvir}
+    Provjera tipova podataka.
+    \begin{pythoncode}
+filozof = "Aristotel"
+godina_rodenja = -384
+visina_u_metrima = 1.7
+je_li_ziv = False
+
+print(type(filozof))
+print(type(godina_rodenja))
+print(type(visina_u_metrima))
+print(type(je_li_ziv))
+    \end{pythoncode}
+    \begin{codeoutput}
+<class 'str'>
+<class 'int'>
+<class 'float'>
+<class 'bool'>
+    \end{codeoutput}
+\end{primjerokvir}
+
+\subsection{Izrazi: Kombiniranje vrijednosti}
+
+U logici, kombiniramo propozicije pomoću veznika ($\konj, \disj, \impl$) kako bismo stvorili složenije izraze. U \pyinline{Python}u, \textbf{izrazi} su kombinacije vrijednosti, varijabli i operatora koje se izračunavaju (evaluiraju) kako bi proizvele novu vrijednost.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Aritmetički izrazi:} Koriste standardne matematičke operatore (\pyinline{+}, \pyinline{-}, \pyinline{*}, \pyinline{/}).
+    \begin{pythoncode}
+a = 10
+b = 5
+zbroj = a + b
+print(zbroj)
+    \end{pythoncode}
+    \begin{codeoutput}
+15
+    \end{codeoutput}
+
+    \item \textbf{String izrazi:} Operator \pyinline{+} se može koristiti za spajanje (\textit{konkatenaciju}) stringova.
+    \begin{pythoncode}
+ime = "Immanuel"
+prezime = "Kant"
+puno_ime = ime + " " + prezime
+print(puno_ime)
+    \end{pythoncode}
+    \begin{codeoutput}
+Immanuel Kant
+    \end{codeoutput}
+\end{itemize}
+
+\section{Strukture podataka: Organiziranje misli}
+\label{sec:strukture_podataka}
+
+Dok osnovni tipovi podataka predstavljaju pojedinačne vrijednosti, \textbf{strukture podataka} služe za organiziranje i pohranu više vrijednosti u jednoj varijabli.
+
+\subsection{Liste: Uređeni nizovi argumenata}
+
+U filozofskim tekstovima, često nailazimo na nabrajanja ili nizove ideja, poput Aristotelovih četiriju uzroka. U \pyinline{Python}u, \textbf{liste} su strukture podataka koje nam omogućuju pohranu uređenog niza elemenata. Elementi liste se navode unutar uglatih zagrada \pyinline{[]}, odvojeni zarezima.
+
+\begin{definicijaokvir}
+    \textbf{Lista} (\pyinline{list}) je promjenjiva, uređena kolekcija elemenata. "Uređena" znači da elementi zadržavaju redoslijed kojim su dodani. "Promjenjiva" znači da možemo dodavati, uklanjati ili mijenjati elemente nakon što je lista stvorena.
+\end{definicijaokvir}
+
+\begin{primjerokvir}
+    Kreiranje i pristupanje elementima liste.
+    \begin{pythoncode}
+# Lista Aristotelovih uzroka
+aristotelovi_uzroci = ["materijalni", "formalni", "djelatni", "svršni"]
+
+# Pristupanje elementima pomoću indeksa
+# Indeksiranje počinje od 0!
+prvi_uzrok = aristotelovi_uzroci[0]
+treci_uzrok = aristotelovi_uzroci[2]
+
+print("Prvi uzrok je:", prvi_uzrok)
+print("Treći uzrok je:", treci_uzrok)
+    \end{pythoncode}
+    \begin{codeoutput}
+Prvi uzrok je: materijalni
+Treći uzrok je: djelatni
+    \end{codeoutput}
+
+    Liste su promjenjive. Možemo im dodavati nove elemente metodom \pyinline{append()} ili uklanjati postojeće metodom \pyinline{remove()}.
+
+    \begin{pythoncode}
+# Dodavanje petog, "imaginarnog" uzroka
+aristotelovi_uzroci.append("imaginarni")
+print(aristotelovi_uzroci)
+
+# Uklanjanje "imaginarnog" uzroka
+aristotelovi_uzroci.remove("imaginarni")
+print(aristotelovi_uzroci)
+    \end{pythoncode}
+    \begin{codeoutput}
+['materijalni', 'formalni', 'djelatni', 'svršni', 'imaginarni']
+['materijalni', 'formalni', 'djelatni', 'svršni']
+    \end{codeoutput}
+\end{primjerokvir}
+
+\subsection{Rječnici: Asocijativni parovi pojmova i definicija}
+
+U filozofiji, često definiramo pojmove tako da im pridružujemo njihove definicije. U \pyinline{Python}u, \textbf{rječnici} (\pyinline{dict}) omogućuju pohranu podataka u obliku parova \textbf{ključ-vrijednost}. Ključevi su jedinstveni i koriste se za pristup pripadajućim vrijednostima.
+
+\begin{definicijaokvir}
+    \textbf{Rječnik} (\pyinline{dict}) je promjenjiva, neuređena kolekcija parova ključ-vrijednost. Svaki ključ mora biti jedinstven unutar rječnika.
+\end{definicijaokvir}
+
+Rječnici se definiraju unutar vitičastih zagrada \pyinline{{}}, a parovi ključ-vrijednost odvojeni su dvotočkom.
+
+\begin{primjerokvir}
+    Kreiranje i korištenje rječnika.
+    \begin{pythoncode}
+filozofski_rjecnik = {
+    "epistemologija": "grana filozofije koja se bavi znanjem",
+    "metafizika": "grana filozofije koja se bavi prvim uzrocima i principima bića",
+    "etika": "grana filozofije koja se bavi moralom"
+}
+
+# Pristupanje vrijednosti pomoću ključa
+definicija_etike = filozofski_rjecnik["etika"]
+print(definicija_etike)
+
+# Dodavanje novog para
+filozofski_rjecnik["logika"] = "znanost o metodama i principima ispravnog zaključivanja"
+print(filozofski_rjecnik["logika"])
+    \end{pythoncode}
+    \begin{codeoutput}
+grana filozofije koja se bavi moralom
+znanost o metodama i principima ispravnog zaključivanja
+    \end{codeoutput}
+\end{primjerokvir}
+
+\section{Kontrola toka: Usmjeravanje argumentacije}
+\label{sec:kontrola_toka}
+
+Programi se ne izvršavaju uvijek linearno, od prve do zadnje naredbe. \textbf{Kontrola toka} odnosi se na naredbe koje nam omogućuju da usmjeravamo tijek izvršavanja programa, donosimo odluke i ponavljamo operacije.
+
+\subsection{Uvjetno izvršavanje: \pyinline{if}, \pyinline{elif}, \pyinline{else}}
+
+U filozofskoj argumentaciji, često koristimo uvjetne rečenice oblika "Ako $\logsud{P}$, onda $\logsud{Q}$". U \pyinline{Python}u, \textbf{uvjetne naredbe} nam omogućuju da izvršimo određeni dio koda samo ako je zadovoljen neki uvjet. Uvjet je izraz koji se evaluira kao \pyinline{True} ili \pyinline{False}.
+
+\begin{primjerokvir}
+    Korištenje \pyinline{if-else} strukture.
+    \begin{pythoncode}
+tvrdnja = "Sokrat je smrtan"
+
+if "Sokrat" in tvrdnja:
+    print("Tvrdnja se odnosi na Sokrata.")
+else:
+    print("Tvrdnja se ne odnosi na Sokrata.")
+    \end{pythoncode}
+    \begin{codeoutput}
+Tvrdnja se odnosi na Sokrata.
+    \end{codeoutput}
+
+    Možemo koristiti i \pyinline{elif} (skraćeno od \textit{else if}) za provjeru više uzastopnih uvjeta.
+
+    \begin{pythoncode}
+godina = 1804
+
+if godina < 476:
+    print("Antička filozofija")
+elif 476 <= godina < 1500:
+    print("Srednjovjekovna filozofija")
+else:
+    print("Moderna i suvremena filozofija")
+    \end{codeoutput}
+    \begin{codeoutput}
+Moderna i suvremena filozofija
+    \end{codeoutput}
+\end{primjerokvir}
+
+\subsection{Ponavljanje: \pyinline{for} petlja}
+
+Često je potrebno ponoviti istu radnju više puta. Na primjer, analizirati svaku riječ u rečenici. U \pyinline{Python}u, \textbf{\pyinline{for} petlja} nam omogućuje da iteriramo (prolazimo) kroz elemente sekvence (poput liste ili stringa) i za svaki element izvršimo određeni blok koda.
+
+\begin{primjerokvir}
+    Iteriranje kroz listu pomoću \pyinline{for} petlje.
+    \begin{pythoncode}
+stoicke_vrline = ["mudrost", "pravednost", "hrabrost", "umjerenost"]
+
+print("Prema stoicima, temeljne vrline su:")
+for vrlina in stoicke_vrline:
+    # Blok koda unutar petlje je uvučen
+    print("- " + vrlina)
+    \end{pythoncode}
+    \begin{codeoutput}
+Prema stoicima, temeljne vrline su:
+- mudrost
+- pravednost
+- hrabrost
+- umjerenost
+    \end{codeoutput}
+
+    U ovom primjeru, varijabla \pyinline{vrlina} se naziva \textit{varijabla petlje}. U svakom prolasku (iteraciji) kroz petlju, ona poprima vrijednost sljedećeg elementa iz liste \pyinline{stoicke_vrline}.
+\end{primjerokvir}
+
+\section{Funkcije: Modularizacija i ponovna upotreba misli}
+\label{sec:funkcije}
+
+U filozofiji, kompleksne ideje često razlažemo na manje, razumljivije dijelove. U \pyinline{Python}u, \textbf{funkcije} nam omogućuju da grupiramo niz naredbi u logičku cjelinu koju možemo pozvati više puta. Time se izbjegava ponavljanje koda i programi postaju organiziraniji i lakši za čitanje.
+
+\begin{definicijaokvir}
+    \textbf{Funkcija} je imenovani blok koda koji izvršava određeni zadatak. Može primiti ulazne podatke (argumente) i vratiti izlaznu vrijednost.
+\end{definicijaokvir}
+
+Funkcije definiramo pomoću ključne riječi \pyinline{def}.
+
+\begin{primjerokvir}
+    Definiranje i pozivanje jednostavne funkcije.
+    \begin{pythoncode}
+def pozdravi_filozofa(ime):
+    """
+    Ova funkcija ispisuje pozdrav filozofu čije je ime
+    prolijeđeno kao argument.
+    """
+    print("Pozdrav, " + ime + "!")
+
+# Pozivanje funkcije
+pozdravi_filozofa("Platon")
+pozdravi_filozofa("Nietzsche")
+    \end{pythoncode}
+    \begin{codeoutput}
+Pozdrav, Platon!
+Pozdrav, Nietzsche!
+    \end{codeoutput}
+    Tekst unutar trostrukih navodnika odmah nakon definicije funkcije naziva se \textit{docstring} i služi kao dokumentacija funkcije.
+\end{primjerokvir}
+
+Funkcije mogu vraćati vrijednost pomoću naredbe \pyinline{return}. Vraćena vrijednost se tada može pohraniti u varijablu ili koristiti u daljnjim izrazima.
+
+\begin{primjerokvir}
+    Funkcija koja vraća vrijednost.
+    \begin{pythoncode}
+def sastavi_ime(ime, prezime):
+    """Sastavlja puno ime iz dva dijela."""
+    return ime + " " + prezime
+
+puno_ime_filozofa = sastavi_ime("Simone", "de Beauvoir")
+print(puno_ime_filozofa)
+    \end{pythoncode}
+    \begin{codeoutput}
+Simone de Beauvoir
+    \end{codeoutput}
+\end{primjerokvir}
+
+\section{Primjer iz prakse: Analiza filozofskog teksta}
+\label{sec:primjer_prakse}
+
+Sada ćemo primijeniti sve što smo naučili na konkretnom primjeru: analizi kratkog filozofskog teksta. Cilj nam je prebrojati koliko se puta svaka riječ pojavljuje u poznatoj Descartesovoj izreci.
+
+\begin{primjerokvir}
+    Brojanje riječi u tekstu.
+    \begin{pythoncode}
+# Korak 1: Definiramo tekst za analizu
+tekst = "Mislim, dakle jesam. Jesam, dakle postojim."
+print("Originalni tekst:", tekst)
+
+# Korak 2: Priprema teksta
+# Pretvaramo sva slova u mala slova kako 'Mislim' i 'mislim' ne bi bili različite riječi
+tekst_mali = tekst.lower()
+# Uklanjamo interpunkcijske znakove
+tekst_bez_tocke = tekst_mali.replace('.', '')
+tekst_cisti = tekst_bez_tocke.replace(',', '')
+print("Očišćeni tekst:", tekst_cisti)
+
+# Korak 3: Tokenizacija - razdvajanje teksta u listu riječi
+rijeci = tekst_cisti.split()
+print("Lista riječi:", rijeci)
+
+# Korak 4: Brojanje riječi pomoću rječnika
+brojac_rijeci = {}
+for rijec in rijeci:
+    if rijec in brojac_rijeci:
+        # Ako riječ već postoji u rječniku, povećaj brojač za 1
+        brojac_rijeci[rijec] = brojac_rijeci[rijec] + 1
+    else:
+        # Ako je ovo prvo pojavljivanje riječi, dodaj je u rječnik s vrijednošću 1
+        brojac_rijeci[rijec] = 1
+
+# Korak 5: Ispis rezultata
+print("\nFrekvencija riječi:")
+for rijec, broj in brojac_rijeci.items():
+    print(f"'{rijec}': {broj}")
+    \end{pythoncode}
+
+    \begin{codeoutput}
+Originalni tekst: Mislim, dakle jesam. Jesam, dakle postojim.
+Očišćeni tekst: mislim dakle jesam jesam dakle postojim
+Lista riječi: ['mislim', 'dakle', 'jesam', 'jesam', 'dakle', 'postojim']
+
+Frekvencija riječi:
+'mislim': 1
+'dakle': 2
+'jesam': 2
+'postojim': 1
+    \end{codeoutput}
+    Ovaj primjer integrira varijable, stringove i njihove metode (\pyinline{.lower()}, \pyinline{.replace()}, \pyinline{.split()}), liste, rječnike, \pyinline{for} petlju i \pyinline{if-else} uvjetnu logiku kako bi se riješio konkretan problem iz domene analize teksta.
+\end{primjerokvir}
+
+\section{Zaključak: Sljedeći koraci}
+\label{sec:zakljucak}
+
+Ovo poglavlje pružilo je kratak pregled osnovnih elemenata programskog jezika \pyinline{Python}. Vidjeli smo kako varijable i tipovi podataka predstavljaju osnovne gradivne blokove, kako strukture podataka poput lista i rječnika organiziraju informacije, kako kontrola toka usmjerava izvršavanje programa i kako funkcije omogućuju modularnost i ponovnu upotrebu koda.
+
+Kao studenti filozofije, sada imate temelj za daljnje istraživanje. Sljedeći koraci mogli bi uključivati:
+\begin{itemize}
+    \item \textbf{Rad s tekstom:} \pyinline{Python} je izuzetno moćan za analizu teksta. Možete istražiti kako brojati riječi, analizirati sentiment, tražiti određene pojmove u velikim tekstualnim korpusima (npr. djelima pojedinih filozofa) i još mnogo toga. Biblioteke poput \pyinline{NLTK} (Natural Language Toolkit) i \pyinline{spaCy} otvaraju vrata svijeta \textit{računalne lingvistike}.
+    \item \textbf{Vizualizacija podataka:} Pomoću biblioteka kao što su \pyinline{Matplotlib} i \pyinline{Seaborn}, možete vizualizirati odnose između pojmova, učestalost riječi ili druge uvide koje dobijete analizom teksta, pretvarajući apstraktne podatke u jasne grafove.
+    \item \textbf{Web scraping:} Možete naučiti kako automatski prikupljati tekstualne podatke s web stranica, na primjer, s filozofskih enciklopedija ili online arhiva.
+\end{itemize}
+
+Najvažnije je da se ne bojite eksperimentirati. Jupyter bilježnice su idealno okruženje za to. Pokušajte mijenjati primjere, postavljati si vlastite male probleme i tražiti rješenja. Programiranje, kao i filozofija, je vještina koja se razvija kroz praksu, znatiželju i upornost. Sretno s kodiranjem!
+
+\chapter*{Vježbe za poglavlje \ref{chap:uvod}}
+\addcontentsline{toc}{chapter}{Vježbe za poglavlje \thechapter}
+
+\begin{vježba}
+    Kreirajte rječnik koji sadrži pet vaših omiljenih filozofa kao ključeve, a njihove glavne filozofske ideje ili djela kao vrijednosti. Zatim, koristeći \pyinline{for} petlju, ispišite svakog filozofa i njegovu ideju u formatu: \texttt{Ime Filozofa: Glavna ideja}.
+\end{vježba}
+
+\begin{vježba}
+    Napišite funkciju pod nazivom \pyinline{broj_rijeci} koja prima jedan argument (string) i vraća broj riječi u tom stringu. (Savjet: metoda \pyinline{split()} bi mogla biti korisna). Testirajte funkciju s nekoliko rečenica.
+\end{vježba}
+
+\begin{vježba}
+    Napišite program koji provjerava pripada li godina određenom filozofskom razdoblju.
+    \begin{enumerate}
+        \item Definirajte listu koja sadrži nekoliko filozofa egzistencijalizma, npr. \pyinline{egzistencijalisti = ["Sartre", "Camus", "Kierkegaard"]}.
+        \item Pitajte korisnika da unese ime filozofa pomoću funkcije \pyinline{input()}.
+        \item Koristeći \pyinline{if} naredbu i operator \pyinline{in}, provjerite nalazi li se uneseno ime u vašoj listi.
+        \item Ispišite odgovarajuću poruku, npr. "\texttt{Sartre je egzistencijalist.}" ili "\texttt{Platon nije egzistencijalist.}".
+    \end{enumerate}
+\end{vježba}

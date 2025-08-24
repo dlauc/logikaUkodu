@@ -449,18 +449,18 @@ class JupyterToLatexConverter:
 
         # Process display math first ($$...$$)
         cleaned = re.sub(r'\$\$(.+?)\$\$',
-                         lambda m: '\\[' + self.convert_math_content(m.group(1)) + '\\]',
-                         cleaned, flags=re.DOTALL)
+                        lambda m: '\\[' + self.convert_math_content(m.group(1)) + '\\]',
+                        cleaned, flags=re.DOTALL)
 
         # Process inline math - preserve the $ signs and convert symbols inside
         cleaned = re.sub(r'(?<!\$)\$(?!\$)([^\$]+?)\$(?!\$)',
-                         lambda m: '$' + self.convert_math_content(m.group(1)) + '$',
-                         cleaned)
+                        lambda m: '$' + self.convert_math_content(m.group(1)) + '$',
+                        cleaned)
 
         # Process LaTeX environments like \[...\]
         cleaned = re.sub(r'\\\[(.+?)\\\]',
-                         lambda m: '\\[' + self.convert_math_content(m.group(1)) + '\\]',
-                         cleaned, flags=re.DOTALL)
+                        lambda m: '\\[' + self.convert_math_content(m.group(1)) + '\\]',
+                        cleaned, flags=re.DOTALL)
 
         # Then convert any remaining loose symbols that aren't in math mode
         cleaned = self.convert_symbols_in_text(cleaned)
@@ -519,7 +519,7 @@ class JupyterToLatexConverter:
             # Check for separator lines that often accompany tables
             if re.match(r'^[=\-]{3,}$', line):
                 # Check if there are pipes nearby
-                for j in range(max(0, i - 2), min(len(lines), i + 3)):
+                for j in range(max(0, i-2), min(len(lines), i+3)):
                     if j != i and '|' in lines[j] and not self.is_math_expression(lines[j]):
                         return True
 
@@ -715,7 +715,7 @@ class JupyterToLatexConverter:
 
         # Check if this is LaTeX content that should be rendered directly
         if self.is_latex_content(text):
-            text = self.process_latex_output(text)
+            return self.process_latex_output(text)
 
         # Process headers FIRST (clean_header will handle math expressions inside)
         text = re.sub(
@@ -965,3 +965,4 @@ if __name__ == '__main__':
     JupyterToLatexConverter('biljeznice/cantor.ipynb', 'knjiga/cantor.tex')
     JupyterToLatexConverter('biljeznice/pascal.ipynb', 'knjiga/pascal.tex')
     JupyterToLatexConverter('biljeznice/bayes.ipynb', 'knjiga/bayes.tex')
+    JupyterToLatexConverter('biljeznice/goodman.ipynb', 'knjiga/goodman.tex')
