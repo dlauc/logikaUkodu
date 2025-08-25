@@ -1,4 +1,4 @@
-
+% !TEX TS-program = pdflatex --shell-escape
 \documentclass[11pt,a4paper,twoside,openright]{book}
 
 % ===================================
@@ -6,31 +6,54 @@
 % ===================================
 
 % Osnovni paketi za hrvatski jezik
-\usepackage{fontspec}        % Omogućuje korištenje OpenType fontova u XeTeX/LuaTeX
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage[croatian]{babel}
-\usepackage{lmodern}         % I dalje je dobro imati za matematičke fontove
-
-% Postavljanje zadanih fontova na Latin Modern (moderna verzija)
-\setmainfont{Latin Modern Roman}
-\setsansfont{Latin Modern Sans}
-\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
 
 % Matematika i simboli
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathtools}
-\usepackage{stmaryrd} % Za dodatne logičke simbole
-\usepackage{bussproofs} % Za dokaze u prirodnoj dedukciji
+\usepackage{stmaryrd}
+\usepackage{bussproofs}
 
 % Programski kod
 \usepackage{listings}
-\usepackage{minted} % Naprednije označavanje koda
+\usepackage{minted}
 \usepackage{tcolorbox}
 \tcbuselibrary{minted,skins,breakable}
+
+% Define the background color for code blocks
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\setminted{breaklines,autogobble,linenos,numbersep=5pt}
+
+% Define codeoutput environment
+%\newenvironment{codeoutput}{%
+%  \begin{tcolorbox}[title=Output,colback=gray!5!white,colframe=gray!75!black]%
+%  \begin{verbatim}%
+%}{%
+%  \end{verbatim}%
+%  \end{tcolorbox}%
+%}
+\newtcolorbox{codeoutput}{
+    colback=gray!10,
+    colframe=gray!50,
+    breakable,
+    fonttitle=\bfseries,
+    title=Izlaz:,
+    before upper=\small\ttfamily,
+    sharp corners,
+    boxrule=1pt,
+    left=2mm,
+    right=2mm,
+    top=2mm,
+    bottom=2mm
+}
 
 % Grafika i boje
 \usepackage{graphicx}
 \usepackage{tikz}
-\usetikzlibrary{trees,arrows,positioning,calc,shapes}
+\usetikzlibrary{trees,arrows,positioning,calc,shapes,patterns,shadows.blur}
 \usepackage{xcolor}
 \usepackage{colortbl}
 
@@ -38,12 +61,11 @@
 \usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm]{geometry}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
-\usepackage{microtype} % Poboljšava tipografiju
+\usepackage{microtype}
 
 % Hiperveze i reference
 \usepackage[colorlinks=true,linkcolor=blue!70!black,citecolor=green!50!black,urlcolor=blue!70!black]{hyperref}
 \usepackage{cleveref}
-%\usepackage[unicode, pdfencoding=auto]{hyperref}
 
 % Tablice i liste
 \usepackage{booktabs}
@@ -57,6 +79,8 @@
 \usepackage{mdframed}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{newunicodechar}
+
 
 % ===================================
 % DEFINICIJE BOJA
@@ -71,34 +95,14 @@
 \definecolor{theorembg}{RGB}{240,248,255}
 \definecolor{examplebg}{RGB}{245,255,245}
 \definecolor{warningbg}{RGB}{255,250,240}
+\definecolor{filozofija}{RGB}{147,112,219}
+\definecolor{logika}{RGB}{255,215,0}
+\definecolor{informatika}{RGB}{46,139,87}
 
 % ===================================
 % STILOVI ZA KOD (BREAKABLE VERSION)
 % ===================================
 
-% Definicija Python stila za listings
-\lstdefinestyle{pythonstyle}{
-    language=Python,
-    basicstyle=\ttfamily\small,
-    keywordstyle=\color{pythonblue}\bfseries,
-    stringstyle=\color{pythongreen},
-    commentstyle=\color{pythongray}\itshape,
-    numbers=left,
-    numberstyle=\tiny\color{pythongray},
-    stepnumber=1,
-    numbersep=10pt,
-    backgroundcolor=\color{codebg},
-    frame=single,
-    frameround=tttt,
-    framesep=5pt,
-    breaklines=true,
-    breakatwhitespace=true,
-    tabsize=4,
-    showstringspaces=false,
-    captionpos=b
-}
-
-% Stilizirana kutija za Python kod - BREAKABLE VERSION
 \newtcblisting{pythoncode}[1][]{
     listing engine=minted,
     minted language=python,
@@ -114,26 +118,11 @@
     listing only,
     left=5mm,
     enhanced,
-    breakable,  % Makes the box breakable across pages
+    breakable,
     overlay={\begin{tcbclipinterior}\fill[pythonblue!20] (frame.south west) rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
     #1
 }
 
-% Breakable output box using tcolorbox
-\newtcolorbox{codeoutput}{
-    colback=gray!10,
-    colframe=gray!50,
-    breakable,
-    fonttitle=\bfseries,
-    title=Izlaz:,
-    before upper=\small\ttfamily,
-    sharp corners,
-    boxrule=1pt,
-    left=2mm,
-    right=2mm,
-    top=2mm,
-    bottom=2mm
-}
 
 % ===================================
 % TEOREMI I OKRUŽENJA
@@ -154,7 +143,6 @@
 \newtheorem{primjer}{Primjer}[chapter]
 \newtheorem{vježba}{Vježba}[chapter]
 
-% Stilizirana okruženja
 \newenvironment{definicijaokvir}
     {\begin{mdframed}[backgroundcolor=theorembg,linecolor=pythonblue,linewidth=2pt]
     \begin{definicija}}
@@ -177,11 +165,9 @@
 \titleformat{\chapter}[display]
 {\normalfont\huge\bfseries\color{pythonblue}}
 {\chaptertitlename\ \thechapter}{20pt}{\Huge}
-
 \titleformat{\section}
 {\normalfont\Large\bfseries\color{pythonblue!80}}
 {\thesection}{1em}{}
-
 \titleformat{\subsection}
 {\normalfont\large\bfseries\color{pythonblue!60}}
 {\thesubsection}{1em}{}
@@ -197,25 +183,122 @@
 \fancyhead[RE]{\leftmark}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0pt}
+% --- FIX: Set headheight to prevent warnings ---
+\setlength{\headheight}{15pt}
 
 % ===================================
 % MAKRONAREDBE
 % ===================================
 
-% Logički simboli prema pojmovniku
-\newcommand{\logsud}[1]{\mathit{#1}} % Za sudove/propozicije
-\newcommand{\konj}{\land}             % Konjunkcija
-\newcommand{\disj}{\lor}              % Disjunkcija  
-\newcommand{\impl}{\rightarrow}       % Implikacija
-\newcommand{\biimp}{\leftrightarrow}  % Bikondicional
-\newcommand{\svaki}{\forall}          % Univerzalni kvantifikator
-\newcommand{\postoji}{\exists}        % Egzistencijalni kvantifikator
+% --- FIX: Use \ensuremath to make command safe outside of math mode ---
+\newcommand{\logsud}[1]{\ensuremath{\mathit{#1}}}
+\newcommand{\konj}{\land}
+\newcommand{\disj}{\lor}
+\newcommand{\impl}{\rightarrow}
+\newcommand{\biimp}{\leftrightarrow}
+\newcommand{\svaki}{\forall}
+\newcommand{\postoji}{\exists}
 
-% Python inline kod
 \newcommand{\pyinline}[1]{\texttt{\color{pythonblue}#1}}
+\newcommand{\jupyter}[1]{\marginpar{\small\color{pythongreen}$\triangleright$ #1.ipynb}}
 
-% Jupyter bilježnica referenca
-\newcommand{\jupyter}[1]{\marginpar{\small\color{pythongreen}\faFileCode\ #1.ipynb}}
+
+% Logic symbols
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{□}{\ensuremath{\square}} % Requires amssymb
+\newunicodechar{⊥}{\ensuremath{\bot}}
+\newunicodechar{⊤}{\ensuremath{\top}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\land}}
+\newunicodechar{∨}{\ensuremath{\lor}}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+\newunicodechar{⇐}{\ensuremath{\Leftarrow}}
+\newunicodechar{⇔}{\ensuremath{\Leftrightarrow}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{∄}{\ensuremath{\nexists}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{⊨}{\ensuremath{\models}}
+\newunicodechar{⊣}{\ensuremath{\dashv}}
+\newunicodechar{⊩}{\ensuremath{\Vdash}}
+\newunicodechar{⊬}{\ensuremath{\nvdash}}
+\newunicodechar{⊭}{\ensuremath{\nvDash}}
+\newunicodechar{⊮}{\ensuremath{\nVdash}}
+\newunicodechar{⊯}{\ensuremath{\nVDash}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊂}{\ensuremath{\subset}}
+\newunicodechar{⊃}{\ensuremath{\supset}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{⊇}{\ensuremath{\supseteq}}
+\newunicodechar{⊈}{\ensuremath{\nsubseteq}}
+\newunicodechar{⊉}{\ensuremath{\nsupseteq}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⊕}{\ensuremath{\oplus}}
+\newunicodechar{⊗}{\ensuremath{\otimes}}
+\newunicodechar{⊖}{\ensuremath{\ominus}}
+\newunicodechar{⊙}{\ensuremath{\odot}}
+\newunicodechar{✓}{\ensuremath{\checkmark}}
+\newunicodechar{✗}{\ensuremath{\times}}
+\newunicodechar{≈}{\ensuremath{\approx}}
+\newunicodechar{Σ}{\ensuremath{\Sigma}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{λ}{\ensuremath{\lambda}}
+\newunicodechar{μ}{\ensuremath{\mu}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{Γ}{\ensuremath{\Gamma}}
+\newunicodechar{≤}{\ensuremath{\leq}}
+\newunicodechar{≥}{\ensuremath{\geq}}
+\newunicodechar{≠}{\ensuremath{\neq}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{⟺}{\ensuremath{\Longleftrightarrow}}
+\newunicodechar{⟹}{\ensuremath{\Longrightarrow}}
+\newunicodechar{⟸}{\ensuremath{\Longleftarrow}}
+\newunicodechar{₀}{\ensuremath{_0}}
+\newunicodechar{₁}{\ensuremath{_1}}
+\newunicodechar{₂}{\ensuremath{_2}}
+\newunicodechar{₃}{\ensuremath{_3}}
+\newunicodechar{₄}{\ensuremath{_4}}
+\newunicodechar{₅}{\ensuremath{_5}}
+\newunicodechar{₆}{\ensuremath{_6}}
+\newunicodechar{₇}{\ensuremath{_7}}
+\newunicodechar{₈}{\ensuremath{_8}}
+\newunicodechar{₉}{\ensuremath{_9}}
+\newunicodechar{ₘ}{\ensuremath{_m}}
+\newunicodechar{ₖ}{\ensuremath{_k}}
+\newunicodechar{ᵢ}{\ensuremath{_i}}
+\newunicodechar{⁰}{\ensuremath{^0}}
+\newunicodechar{¹}{\ensuremath{^1}}
+\newunicodechar{²}{\ensuremath{^2}}
+\newunicodechar{³}{\ensuremath{^3}}
+\newunicodechar{⁴}{\ensuremath{^4}}
+\newunicodechar{⁵}{\ensuremath{^5}}
+\newunicodechar{⁶}{\ensuremath{^6}}
+\newunicodechar{⁷}{\ensuremath{^7}}
+\newunicodechar{⁸}{\ensuremath{^8}}
+\newunicodechar{⁹}{\ensuremath{^9}}
+\newunicodechar{ⁿ}{\ensuremath{^n}}
+\newunicodechar{⁺}{\ensuremath{^+}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{ℵ}{\ensuremath{\aleph}}
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{⚡}{\ensuremath{\star}}
+\newunicodechar{⚠}{\ensuremath{\triangle}}
+\newunicodechar{△}{\ensuremath{\triangle}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ₙ}{\ensuremath{_n}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{Ω}{\ensuremath{\Omega}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{ψ}{\ensuremath{\psi}}
 
 % ===================================
 % DOKUMENT
@@ -223,71 +306,47 @@
 
 \begin{document}
 
-% ----------------------------------
-% NASLOVNICA
-% ----------------------------------
 \frontmatter
+\input{title}
+\newpage
+\thispagestyle{empty}
+\vspace*{\fill}
+\noindent
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\baselineskip}
+\textsc{Nakladnik}: \\
+Sveučilište u Zagrebu \\
+Filozofski fakultet \\
+FF Press \\
+\vspace{0.7cm}
+\textsc{Za nakladnika}:\\
+\vspace{0.7cm}
+\textsc{Recenzenti}: \\
+Prof. dr. sc. Zdravko Dovedan Han \\
+Doc. dr. sc. Ines Skelac
+\vspace{0.7cm}
+\textsc{Grafička priprema}: \\
+Davor Lauc
+\vspace{0.7cm}
+\textsc{ISBN:} \\ {\bfseries 978-XXX-XXX-XXX-X}
+\textsc{DOI:} \\ {\bfseries 10.17234/XXXXXXXXXX}
+\vspace{0.7cm}
+\textit{Prvo izdanje, Zagreb, 2025}
+\vspace{0.7cm}
+Djelo je objavljeno pod uvjetima Creative Commons Autorstvo-Nekomercijalno-Dijeli pod istim uvjetima 4.0 Međunarodne javne licence (CC-BY-NC-SA) koja dopušta korištenje, dijeljenje i umnažanje djela, ali samo u nekomercijalne svrhe i uz uvjet da se ispravno citira djelo i autora, te uputi na izvor. Prerađena djela moraju se objaviti pod istim uvjetima.
+\vspace{0.5cm}
+\textsc{Napomena}: \\
+Svi Python primjeri koda u ovom udžbeniku dostupni su kao interaktivne Jupyter bilježnice na adresi: \\
+\texttt{https://github.com/ffzg-logika/logika-u-kodu}
+\vspace*{\fill}
 
-\begin{titlepage}
-    \centering
-    \vspace*{2cm}
-    
-    {\Huge\bfseries\color{pythonblue} LOGIKA U KODU\par}
-    \vspace{1cm}
-    {\Large\itshape Elementi logike kroz programski jezik Python\par}
-    
-    \vspace{3cm}
-    
-    \begin{tikzpicture}
-        \node[circle,draw=pythonblue,line width=2pt,minimum size=3cm] (logic) at (0,0) {
-            \Large $\vdash$
-        };
-        \node[circle,draw=pythonyellow,line width=2pt,minimum size=3cm] (python) at (2,0) {
-            \Large \texttt{Py}
-        };
-        \draw[->,thick,pythongreen] (logic) -- (python);
-    \end{tikzpicture}
-    
-    \vspace{3cm}
-    
-    {\large\scshape Priručnik za kolegij ,,Logika i programiranje''\par}
-    \vspace{1cm}
-    {\large Davor Lauc\par}
-    
-    \vfill
-    
-    {\large Filozofski Fakultet Sveučilišta u Zagrebu\par}
-    {\large 2025\par}
-\end{titlepage}
-
-% ----------------------------------
-% SADRŽAJ
-% ----------------------------------
 \tableofcontents
 
-% ----------------------------------
-% PREDGOVOR
-% ----------------------------------
-\chapter*{Predgovor}
-\addcontentsline{toc}{chapter}{Predgovor}
+\input{predgovor}
 
-Ovaj udžbenik predstavlja moderan pristup učenju logike kroz programski jezik Python, prvenstveno namijenjen polaznicima kolegija ,,Logika i programiranje'' ali i svima onima koji uče logiku ili programiranje, te žele iskoristiti transfer znanja iz jednog područja u drugi.
-Spajanjem apstraktnih logičkih koncepata s konkretnom implementacijom u kodu, studenti mogu neposredno eksperimentirati s logičkim sustavima i dublje razumjeti njihovu strukturu.
-
-Udžbenik koristi hrvatsku terminologiju prema standardnom pojmovniku logike, ali uvodi i međunarodne termine važne za rad u području računarstva i umjetne inteligencije.
-
-Svako poglavlje popraćeno je Jupyter bilježnicama koje omogućuju interaktivno učenje i eksperimentiranje.
-
-% ----------------------------------
-% UVOD
-% ----------------------------------
 \mainmatter
-
 \input{uvod}
 
-% ----------------------------------
-% DIO I: OSNOVE
-% ----------------------------------
 \part{SVJETOVI DEDUKTIVNE LOGIKE}
 \input{wittgenstein}
 \input{gentzen}
@@ -300,22 +359,11 @@ Svako poglavlje popraćeno je Jupyter bilježnicama koje omogućuju interaktivno
 \input{bayes}
 \input{goodman}
 
-
-% ----------------------------------
-% DODACI
-% ----------------------------------
 \appendix
-
 \input{python}
 
-
-% ----------------------------------
-% BIBLIOGRAFIJA I KAZALO
-% ----------------------------------
 \backmatter
-
 % \bibliographystyle{plain}
 % \bibliography{literatura}
-
 
 \end{document}

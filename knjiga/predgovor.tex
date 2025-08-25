@@ -1,0 +1,82 @@
+\chapter*{Predgovor}
+\addcontentsline{toc}{chapter}{Predgovor}
+
+Ovaj udžbenik rođen je iz uvjerenja da logika i programiranje nisu samo paralelne discipline,
+već duboko isprepleteni načini mišljenja koji se međusobno osvjetljavaju.
+Kroz desetljeće predavanja kolegija ,,Logika i programiranje'' na Filozofskom fakultetu Sveučilišta u Zagrebu,
+svjedočio sam transformativnoj moći ovog spoja – kako studenti filozofije otkrivaju konkretnost apstraktnih
+logičkih principa kroz kod, a studenti informatike pronalaze dublju strukturu svojih programa kroz formalnu logiku.
+
+\section*{Zašto logika kroz kod?}
+
+Gottfried Wilhelm Leibniz, čiji citat otvara ovu knjigu, sanjao je o \textit{calculus ratiocinator} – univerzalnom logičkom računu koji bi mogao riješiti sve filozofske sporove. Njegov san danas živi u programskim jezicima. Kada pišemo Python kod, mi zapravo formaliziramo misao. Svaki \texttt{if-else} izraz je logička implikacija, svaka petlja kvantifikacija, svaka funkcija dokaz.
+
+Tradicionalni pristup učenju logike često ostaje na razini apstraktnih formula i tablica istinitosti. Ovaj udžbenik ide korak dalje – omogućava vam da \textit{pokrenete} logiku. Umjesto da samo čitate o modus ponensu, vi ga implementirate i testirate. Umjesto da memorizirate De Morganove zakone, vi ih verificirate kroz tisuće automatski generiranih primjera. Ova neposrednost iskustva transformira učenje iz pasivnog usvajanja u aktivno istraživanje.
+
+\section*{Filozofska pozadina}
+
+Veza između logike i računarstva nije slučajna ni površna. Curry-Howard izomorfizam, jedan od najdubljih rezultata 20. stoljeća, pokazuje da su dokazi i programi zapravo dvije strane iste medalje. Kada pišete funkciju tipa \texttt{A -> B}, vi tvrdite da možete konstruirati dokaz za B iz dokaza za A. Izvršavanje programa \textit{jest} normalizacija dokaza.
+
+Wittgensteinov \textit{Tractatus}, koji inspirira jedno od ključnih poglavlja, nudi sliku svijeta kao totaliteta činjenica u logičkom prostoru. Naša Python implementacija ovog koncepta nije samo pedagogijska vježba – ona demonstrira kako računarski modeli mogu učiniti metafizičke koncepte operacionalnima i provjerljivima.
+
+\section*{Struktura i pristup}
+
+Udžbenik je organiziran u dva glavna dijela koji reflektiraju temeljnu podjelu u logici:
+
+\textbf{Prvi dio – Svjetovi deduktivne logike} vodi vas kroz klasične sustave gdje zaključci nužno slijede iz premisa. Počinjemo s Wittgensteinovom semantičkom perspektivom, prelazimo na Gentzenovu prirodnu dedukciju, istražujemo Tarskog teoriju istine, te završavamo s Turingovim strojevima i Cantorovim dijagonalnim argumentom. Svaki sustav implementiran je u Pythonu, omogućavajući vam da eksperimentirate s različitim pristupima formalnom zaključivanju.
+
+\textbf{Drugi dio – Svjetovi induktivnih logika} istražuje sustave gdje zaključci imaju samo određeni stupanj vjerojatnosti. Pascalova oklada uvodi nas u teoriju odlučivanja, Bayesov teorem u probabilističko zaključivanje, a Goodmanov paradoks u probleme indukcije. Ovi sustavi posebno su relevantni za moderno strojno učenje i umjetnu inteligenciju.
+
+\section*{Pedagoški pristup}
+
+Svako poglavlje slijedi konzistentnu strukturu: filozofska motivacija, formalna definicija,
+Python implementacija, te zadaci za samostalno istraživanje.
+Jupyter bilježnice omogućavaju vam da mijenjate kod, testirate granične slučajeve i razvijate vlastite eksperimente. Greške nisu prepreke već prilike – kada program ne radi kako očekujete, vi otkrivate suptilnosti logičkih principa.
+
+Terminologija slijedi hrvatski pojmovnik logike, ali uvodi i međunarodne termine nužne za rad u globalnoj akademskoj i profesionalnoj zajednici. Kad god je moguće, dajemo etimologiju i filozofsku pozadinu termina, pomažući vam da razvijete ne samo tehničku kompetenciju već i konceptualno razumijevanje.
+
+\section*{Za koga je ova knjiga?}
+
+Primarno, udžbenik je namijenjen studentima filozofije koji žele razumjeti formalnu logiku kroz praktičnu primjenu.
+Ali jednako je vrijedan za:
+
+\begin{itemize}
+\item Studente računarstva koji žele dublje razumjeti teoretske temelje svoje discipline
+\item Istraživače u umjetnoj inteligenciji koji rade s logičkim sustavima
+\item Nastavnike koji traže moderne pristupe predavanju logike
+\item Autodidakte fascinirane vezom između mišljenja i računanja
+\end{itemize}
+
+Ne pretpostavljamo prethodno znanje programiranja – Python uvod u dodatku pruža sve potrebne osnove.
+Također ne pretpostavljamo formalno obrazovanje iz logike – gradimo od temelja prema naprijed.
+
+\section*{Kako koristiti ovaj udžbenik}
+
+Materijali su dizajnirani za fleksibilno korištenje. Možete:
+
+\begin{enumerate}
+\item Pratiti linearno kroz poglavlja za sistematski kurs
+\item Birati teme prema interesu za samostalno učenje
+\item Koristiti kao referencu za specifične logičke sustave
+\item Adaptirati Jupyter bilježnice za vlastite projekte
+\end{enumerate}
+
+Sav kod dostupan je na \texttt{https://github.com/dlauc/logikaukodu} pod Creative Commons licencom. Potičemo vas da eksperimentirate, modificirate i dijelite svoje uvide s zajednicom.
+
+\section*{Zahvale}
+
+Ovaj udžbenik ne bi bio moguć bez podrške mnogih. Zahvaljujem kolegama s Odsjeka za filozofiju, posebno prof. dr. sc. Zdravku Dovedanu Han i doc. dr. sc. Ines Skelac na recenzijama i vrijednim sugestijama. Studentima koji su kroz godine svojim pitanjima, nedoumicama i entuzijazom oblikovali ovaj materijal. Mojoj obitelji na strpljenju tijekom dugih sati pisanja i kodiranja.
+
+Posebna zahvala zajednici otvorenog koda – developerima Pythona, Jupytera, i brojnih biblioteka koje omogućavaju ovu vrstu pedagoškog eksperimenta. Njihov rad pokazuje da je znanje najmoćnije kada je dijeljeno.
+
+\section*{Poziv na putovanje}
+
+Logika nije samo akademska disciplina – ona je način razumijevanja strukture stvarnosti i mišljenja. Programiranje nije samo praktična vještina – ono je realizacija Leibnizovog sna o formalizaciji razuma. Zajedno, oni nude jedinstvenu perspektivu na vječna pitanja: Što znači misliti? Kako možemo biti sigurni u svoje zaključke? Može li stroj razumjeti?
+
+Pozivam vas da kroz ovu knjigu ne samo učite o logici i programiranju, već da aktivno istražujete, eksperimentirate i otkrivate. Svaka greška je lekcija, svaki uspješno pokrenut program mali trijumf razumijevanja. Neka vam ovo putovanje kroz logiku i kod bude intelektualna avantura koja mijenja način na koji vidite i svijet i vlastito mišljenje.
+
+\vspace{1cm}
+\begin{flushright}
+\textit{Davor Lauc}\\
+\textit{Zagreb, siječanj 2025}
+\end{flushright}

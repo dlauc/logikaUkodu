@@ -1,0 +1,79 @@
+\begin{titlepage}
+    \thispagestyle{empty}
+    \centering
+
+    % Use \vfill to flexibly manage vertical space and prevent page overflow
+    \vspace*{1.5cm} % Pushes the content down from the top margin
+
+    %---------------------------------------------------------------
+    % TITLE AND SUBTITLE
+    %---------------------------------------------------------------
+    {\fontsize{40}{48}\selectfont\bfseries\color{pythonblue}
+    LOGIKA U KODU}
+
+    \vspace{0.5cm}
+
+    % A subtle decorative rule
+    \rule{0.4\textwidth}{0.4pt}
+
+    \vspace{0.8cm}
+
+    {\Large\color{pythongray}
+    Elementi logike kroz programski jezik Python}
+
+    \vfill % Adds flexible space after the title block
+
+    %---------------------------------------------------------------
+    % VENN DIAGRAM
+    % Recreates the visual from your original PDF
+    %---------------------------------------------------------------
+    \begin{center}
+    \begin{tikzpicture}[scale=1.1, every node/.style={transform shape, text=black!70}]
+        % Circles with fill and opacity to show intersections
+        \begin{scope}[fill opacity=0.55, line width=1.2pt]
+            \fill[logika, draw=logika!80!black] (0, 1.3) circle (2.2cm);
+            \fill[filozofija, draw=filozofija!80!black] (-1.1, -0.6) circle (2.2cm);
+            \fill[informatika, draw=informatika!80!black] (1.1, -0.6) circle (2.2cm);
+        \end{scope}
+
+        % Main labels for each field
+        \node at (0, 2.7) {\Large\bfseries LOGIKA};
+        \node[anchor=east] at (-2.3, 0.6) {\Large\bfseries FILOZOFIJA};
+        \node[anchor=west] at (2.3, 0.6) {\Large\bfseries INFORMATIKA};
+
+        % Symbols inside the main part of each circle
+        \node at (0, 0.8) {\huge $\forall \exists$};
+        \node at (-1.5, -1.2) {\huge $\Phi$};
+        \node at (1.5, -1.2) {\huge \texttt{</>}};
+
+%        % Labels for the intersection areas
+%        \node[align=center, font=\small] at (-0.9, 0.5) {formalni\\dokazi};
+%        \node[align=center, font=\small] at (0.9, 0.5) {Boolean\\logika};
+%        \node[align=center, font=\small] at (0, -1.5) {etika\\AI};
+        \node[font=\huge] at (0, -0.4) {λ};
+    \end{tikzpicture}
+    \end{center}
+
+    \vfill % Adds flexible space between the diagram and the author info
+
+    %---------------------------------------------------------------
+    % COURSE AND AUTHOR INFORMATION
+    %---------------------------------------------------------------
+    {\large\scshape Priručnik za kolegij}\\[0.5cm]
+    {\Large\bfseries ,,Logika i programiranje''}\\[1.5cm]
+    {\huge Davor Lauc}
+
+    \vfill % Pushes the institution details to the bottom
+
+    %---------------------------------------------------------------
+    % INSTITUTION AND YEAR
+    %---------------------------------------------------------------
+    \begin{center}
+        {\large\scshape Filozofski fakultet}\\[0.3cm]
+        {\small Sveučilište u Zagrebu}\\[1cm]
+        {\huge\bfseries 2025}
+    \end{center}
+
+    \vspace*{1cm} % Adds a bit of margin at the very bottom
+
+\end{titlepage}

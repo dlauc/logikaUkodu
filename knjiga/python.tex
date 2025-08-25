@@ -13,7 +13,7 @@ Ovo poglavlje je osmišljeno kao blagi uvod u \pyinline{Python}, posebno prilago
 Dok budete prolazili kroz ovo poglavlje, potičem vas da ne gledate na kod samo kao na niz naredbi, već kao na novi način izražavanja i strukturiranja misli. Možda ćete otkriti da vam učenje programiranja može pomoći da postanete precizniji u svom filozofskom promišljanju, jasniji u svom izražavanju i kreativniji u svom pristupu problemima. Dobrodošli u svijet \pyinline{Python}a!
 
 \section{Osnovni pojmovi: Varijable, tipovi podataka i izrazi}
-\label{sec:osnovni_pojmovi}
+\label{sec:osnovnipojmovi}
 
 \subsection{Varijable: Imenovanje ideja}
 
@@ -29,13 +29,13 @@ Varijablu možete zamisliti kao oznaku koju pridružujete nekoj vrijednosti. Ope
     Dodjeljivanje vrijednosti varijablama.
     \begin{pythoncode}
 pozdrav = "Zdravo, svijete!"
-godina_rodenja_kanta = 1724
-pi_priblizno = 3.14159
+godinarodenjakanta = 1724
+pipriblizno = 3.14159
     \end{pythoncode}
-    U ovom primjeru, \pyinline{pozdrav}, \pyinline{godina_rodenja_kanta} i \pyinline{pi_priblizno} su nazivi varijabli. Jednom kada definiramo varijablu, možemo je koristiti u daljnjem kodu, na primjer za ispis njezine vrijednosti pomoću ugrađene funkcije \pyinline{print()}.
+    U ovom primjeru, \pyinline{pozdrav}, \pyinline{godinarodenjakanta} i \pyinline{pipriblizno} su nazivi varijabli. Jednom kada definiramo varijablu, možemo je koristiti u daljnjem kodu, na primjer za ispis njezine vrijednosti pomoću ugrađene funkcije \pyinline{print()}.
     \begin{pythoncode}
 print(pozdrav)
-print(godina_rodenja_kanta)
+print(godinarodenjakanta)
     \end{pythoncode}
     \begin{codeoutput}
 Zdravo, svijete!
@@ -60,14 +60,14 @@ U filozofiji, razlikujemo različite vrste pojmova: konkretne, apstraktne, pojed
     Provjera tipova podataka.
     \begin{pythoncode}
 filozof = "Aristotel"
-godina_rodenja = -384
-visina_u_metrima = 1.7
-je_li_ziv = False
+godinarodenja = -384
+visinaumetrima = 1.7
+jeliziv = False
 
 print(type(filozof))
-print(type(godina_rodenja))
-print(type(visina_u_metrima))
-print(type(je_li_ziv))
+print(type(godinarodenja))
+print(type(visinaumetrima))
+print(type(jeliziv))
     \end{pythoncode}
     \begin{codeoutput}
 <class 'str'>
@@ -97,8 +97,8 @@ print(zbroj)
     \begin{pythoncode}
 ime = "Immanuel"
 prezime = "Kant"
-puno_ime = ime + " " + prezime
-print(puno_ime)
+punoime = ime + " " + prezime
+print(punoime)
     \end{pythoncode}
     \begin{codeoutput}
 Immanuel Kant
@@ -106,7 +106,7 @@ Immanuel Kant
 \end{itemize}
 
 \section{Strukture podataka: Organiziranje misli}
-\label{sec:strukture_podataka}
+\label{sec:strukturepodataka}
 
 Dok osnovni tipovi podataka predstavljaju pojedinačne vrijednosti, \textbf{strukture podataka} služe za organiziranje i pohranu više vrijednosti u jednoj varijabli.
 
@@ -121,16 +121,17 @@ U filozofskim tekstovima, često nailazimo na nabrajanja ili nizove ideja, poput
 \begin{primjerokvir}
     Kreiranje i pristupanje elementima liste.
     \begin{pythoncode}
-# Lista Aristotelovih uzroka
-aristotelovi_uzroci = ["materijalni", "formalni", "djelatni", "svršni"]
+
+## Lista Aristotelovih uzroka
+aristoteloviuzroci = ["materijalni", "formalni", "djelatni", "svršni"]
 
 # Pristupanje elementima pomoću indeksa
 # Indeksiranje počinje od 0!
-prvi_uzrok = aristotelovi_uzroci[0]
-treci_uzrok = aristotelovi_uzroci[2]
+prviuzrok = aristoteloviuzroci[0]
+treciuzrok = aristoteloviuzroci[2]
 
-print("Prvi uzrok je:", prvi_uzrok)
-print("Treći uzrok je:", treci_uzrok)
+print("Prvi uzrok je:", prviuzrok)
+print("Treći uzrok je:", treciuzrok)
     \end{pythoncode}
     \begin{codeoutput}
 Prvi uzrok je: materijalni
@@ -141,12 +142,12 @@ Treći uzrok je: djelatni
 
     \begin{pythoncode}
 # Dodavanje petog, "imaginarnog" uzroka
-aristotelovi_uzroci.append("imaginarni")
-print(aristotelovi_uzroci)
+aristoteloviuzroci.append("imaginarni")
+print(aristoteloviuzroci)
 
 # Uklanjanje "imaginarnog" uzroka
-aristotelovi_uzroci.remove("imaginarni")
-print(aristotelovi_uzroci)
+aristoteloviuzroci.remove("imaginarni")
+print(aristoteloviuzroci)
     \end{pythoncode}
     \begin{codeoutput}
 ['materijalni', 'formalni', 'djelatni', 'svršni', 'imaginarni']
@@ -167,19 +168,19 @@ Rječnici se definiraju unutar vitičastih zagrada \pyinline{{}}, a parovi klju�
 \begin{primjerokvir}
     Kreiranje i korištenje rječnika.
     \begin{pythoncode}
-filozofski_rjecnik = {
+filozofskirjecnik = {
     "epistemologija": "grana filozofije koja se bavi znanjem",
     "metafizika": "grana filozofije koja se bavi prvim uzrocima i principima bića",
     "etika": "grana filozofije koja se bavi moralom"
 }
 
 # Pristupanje vrijednosti pomoću ključa
-definicija_etike = filozofski_rjecnik["etika"]
-print(definicija_etike)
+definicijaetike = filozofskirjecnik["etika"]
+print(definicijaetike)
 
 # Dodavanje novog para
-filozofski_rjecnik["logika"] = "znanost o metodama i principima ispravnog zaključivanja"
-print(filozofski_rjecnik["logika"])
+filozofskirjecnik["logika"] = "znanost o metodama i principima ispravnog zaključivanja"
+print(filozofskirjecnik["logika"])
     \end{pythoncode}
     \begin{codeoutput}
 grana filozofije koja se bavi moralom
@@ -188,7 +189,7 @@ znanost o metodama i principima ispravnog zaključivanja
 \end{primjerokvir}
 
 \section{Kontrola toka: Usmjeravanje argumentacije}
-\label{sec:kontrola_toka}
+\label{sec:kontrolatoka}
 
 Programi se ne izvršavaju uvijek linearno, od prve do zadnje naredbe. \textbf{Kontrola toka} odnosi se na naredbe koje nam omogućuju da usmjeravamo tijek izvršavanja programa, donosimo odluke i ponavljamo operacije.
 
@@ -234,11 +235,11 @@ Moderna i suvremena filozofija
 \begin{primjerokvir}
     Iteriranje kroz listu pomoću \pyinline{for} petlje.
     \begin{pythoncode}
-stoicke_vrline = ["mudrost", "pravednost", "hrabrost", "umjerenost"]
+stoickevrline = ["mudrost", "pravednost", "hrabrost", "umjerenost"]
 
 print("Prema stoicima, temeljne vrline su:")
-for vrlina in stoicke_vrline:
-    # Blok koda unutar petlje je uvučen
+for vrlina in stoickevrline:
+
     print("- " + vrlina)
     \end{pythoncode}
     \begin{codeoutput}
@@ -249,7 +250,7 @@ Prema stoicima, temeljne vrline su:
 - umjerenost
     \end{codeoutput}
 
-    U ovom primjeru, varijabla \pyinline{vrlina} se naziva \textit{varijabla petlje}. U svakom prolasku (iteraciji) kroz petlju, ona poprima vrijednost sljedećeg elementa iz liste \pyinline{stoicke_vrline}.
+    U ovom primjeru, varijabla \pyinline{vrlina} se naziva \textit{varijabla petlje}. U svakom prolasku (iteraciji) kroz petlju, ona poprima vrijednost sljedećeg elementa iz liste \pyinline{stoickevrline}.
 \end{primjerokvir}
 
 \section{Funkcije: Modularizacija i ponovna upotreba misli}
@@ -266,7 +267,7 @@ Funkcije definiramo pomoću ključne riječi \pyinline{def}.
 \begin{primjerokvir}
     Definiranje i pozivanje jednostavne funkcije.
     \begin{pythoncode}
-def pozdravi_filozofa(ime):
+def pozdravifilozofa(ime):
     """
     Ova funkcija ispisuje pozdrav filozofu čije je ime
     prolijeđeno kao argument.
@@ -274,8 +275,8 @@ def pozdravi_filozofa(ime):
     print("Pozdrav, " + ime + "!")
 
 # Pozivanje funkcije
-pozdravi_filozofa("Platon")
-pozdravi_filozofa("Nietzsche")
+pozdravifilozofa("Platon")
+pozdravifilozofa("Nietzsche")
     \end{pythoncode}
     \begin{codeoutput}
 Pozdrav, Platon!
@@ -289,12 +290,12 @@ Funkcije mogu vraćati vrijednost pomoću naredbe \pyinline{return}. Vraćena vr
 \begin{primjerokvir}
     Funkcija koja vraća vrijednost.
     \begin{pythoncode}
-def sastavi_ime(ime, prezime):
+def sastaviime(ime, prezime):
     """Sastavlja puno ime iz dva dijela."""
     return ime + " " + prezime
 
-puno_ime_filozofa = sastavi_ime("Simone", "de Beauvoir")
-print(puno_ime_filozofa)
+punoimefilozofa = sastaviime("Simone", "de Beauvoir")
+print(punoimefilozofa)
     \end{pythoncode}
     \begin{codeoutput}
 Simone de Beauvoir
@@ -302,7 +303,7 @@ Simone de Beauvoir
 \end{primjerokvir}
 
 \section{Primjer iz prakse: Analiza filozofskog teksta}
-\label{sec:primjer_prakse}
+\label{sec:primjerprakse}
 
 Sada ćemo primijeniti sve što smo naučili na konkretnom primjeru: analizi kratkog filozofskog teksta. Cilj nam je prebrojati koliko se puta svaka riječ pojavljuje u poznatoj Descartesovoj izreci.
 
@@ -315,29 +316,29 @@ print("Originalni tekst:", tekst)
 
 # Korak 2: Priprema teksta
 # Pretvaramo sva slova u mala slova kako 'Mislim' i 'mislim' ne bi bili različite riječi
-tekst_mali = tekst.lower()
+tekstmali = tekst.lower()
 # Uklanjamo interpunkcijske znakove
-tekst_bez_tocke = tekst_mali.replace('.', '')
-tekst_cisti = tekst_bez_tocke.replace(',', '')
-print("Očišćeni tekst:", tekst_cisti)
+tekstbeztocke = tekstmali.replace('.', '')
+tekstcisti = tekstbeztocke.replace(',', '')
+print("Očišćeni tekst:", tekstcisti)
 
 # Korak 3: Tokenizacija - razdvajanje teksta u listu riječi
-rijeci = tekst_cisti.split()
+rijeci = tekstcisti.split()
 print("Lista riječi:", rijeci)
 
 # Korak 4: Brojanje riječi pomoću rječnika
-brojac_rijeci = {}
+brojacrijeci = {}
 for rijec in rijeci:
-    if rijec in brojac_rijeci:
+    if rijec in brojacrijeci:
         # Ako riječ već postoji u rječniku, povećaj brojač za 1
-        brojac_rijeci[rijec] = brojac_rijeci[rijec] + 1
+        brojacrijeci[rijec] = brojacrijeci[rijec] + 1
     else:
         # Ako je ovo prvo pojavljivanje riječi, dodaj je u rječnik s vrijednošću 1
-        brojac_rijeci[rijec] = 1
+        brojacrijeci[rijec] = 1
 
 # Korak 5: Ispis rezultata
 print("\nFrekvencija riječi:")
-for rijec, broj in brojac_rijeci.items():
+for rijec, broj in brojacrijeci.items():
     print(f"'{rijec}': {broj}")
     \end{pythoncode}
 
@@ -377,7 +378,7 @@ Najvažnije je da se ne bojite eksperimentirati. Jupyter bilježnice su idealno 
 \end{vježba}
 
 \begin{vježba}
-    Napišite funkciju pod nazivom \pyinline{broj_rijeci} koja prima jedan argument (string) i vraća broj riječi u tom stringu. (Savjet: metoda \pyinline{split()} bi mogla biti korisna). Testirajte funkciju s nekoliko rečenica.
+    Napišite funkciju pod nazivom \pyinline{brojrijeci} koja prima jedan argument (string) i vraća broj riječi u tom stringu. (Savjet: metoda \pyinline{split()} bi mogla biti korisna). Testirajte funkciju s nekoliko rečenica.
 \end{vježba}
 
 \begin{vježba}
@@ -386,6 +387,6 @@ Najvažnije je da se ne bojite eksperimentirati. Jupyter bilježnice su idealno 
         \item Definirajte listu koja sadrži nekoliko filozofa egzistencijalizma, npr. \pyinline{egzistencijalisti = ["Sartre", "Camus", "Kierkegaard"]}.
         \item Pitajte korisnika da unese ime filozofa pomoću funkcije \pyinline{input()}.
         \item Koristeći \pyinline{if} naredbu i operator \pyinline{in}, provjerite nalazi li se uneseno ime u vašoj listi.
-        \item Ispišite odgovarajuću poruku, npr. "\texttt{Sartre je egzistencijalist.}" ili "\texttt{Platon nije egzistencijalist.}".
+        \item Ispišite odgovarajuću poruku, npr. \texttt{Sartre je egzistencijalist.} ili \texttt{Platon nije egzistencijalist.}.
     \end{enumerate}
 \end{vježba}
