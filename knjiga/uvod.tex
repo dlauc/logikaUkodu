@@ -1,111 +1,272 @@
-
 \chapter{Uvod: Što je logika i zašto kod?}
+% Modificirani uvod.tex - čisti LaTeX format
+
 
 \epigraph{Ne priliči izvrsnim ljudima da kao robovi gube sate na računanje, koji se posao može sa punim povjerenjem prepustiti bilo kome drugome uporabom strojeva.}{Gottfried Wilhelm Leibniz\footnotemark}
 \footnotetext{\emph{Machina Arithmetica in qua non Aditio tantum Subtractio 1685}, slobodni prijevod s engleskog prijevoda}
 
-\section*{Logika kao znanost o valjanom zaključivanju}
 
-Logika je znanost koja proučava oblike valjanog zaključivanja i relacije logičkog slijeda. Kada kažemo da je zaključak valjan, mislimo da konkluzija nužno slijedi iz premisa. Ova nužnost nije slučajna – ona proizlazi iz same strukture našeg mišljenja.
-
-Razmotrimo jednostavan primjer. Ako znamo da ``Svi programi imaju greške'' i da je ``Python program'', možemo zaključiti da ``Python ima greške''. Ovo zaključivanje ne ovisi o tome što mislimo o programima ili Pythonu -- ono je valjano zbog svoje logičke forme.
-
-U suvremenoj simboličkoj logici, ovu formu možemo precizno zapisati. Logika sudova bavi se osnovnim veznicima poput konjunkcije ($\wedge$), disjunkcije ($\vee$) i implikacije ($\rightarrow$). Logika predikata ide korak dalje i omogućava nam kvantificiranje -- govorenje o ``svim'' objektima ($\forall$) ili ``nekim'' objektima ($\exists$).
-
-\section*{Python kao jezik za istraživanje logičkih principa}
-
-Zašto baš Python? Ovaj programski jezik nudi idealnu ravnotežu između jednostavnosti i moći. Njegova sintaksa je bliska prirodnom jeziku, što omogućava lakše razumijevanje logičkih koncepata. Istovremeno, Python je dovoljno moćan da implementira složene logičke sustave.
-
-Kada u Pythonu pišemo:
-\begin{verbatim}
-if pada_kiša and nemam_kišobran:
-    postat_ću_mokar = True
-\end{verbatim}
-
-Mi zapravo koristimo logičku konjunkciju. Uvjet \texttt{pada\_kiša and nemam\_kišobran} je istinit samo ako su oba dijela istinita -- upravo kao logički veznik $\wedge$.
-
-Python nam omogućava da logičke koncepte učinimo opipljivima. Možemo implementirati istinosne tablice, provjeriti valjanost zaključaka i vizualizirati logičke strukture. Kroz kod, apstraktni logički principi postaju konkretni i provjerljivi.
-
-\section*{Filozofska pozadina i praktična primjena}
-
-Veza između logike i računarstva nije slučajna. Oba područja bave se preciznim opisivanjem i manipuliranjem informacija. Gottlob Frege, utemeljitelj moderne logike, želio je stvoriti ``pojmovno pismo'' (\textit{Begriffsschrift}) -- formalni jezik za izražavanje čistog mišljenja. Danas, programski jezici ostvaruju upravo tu viziju.
-
-Ludwig Wittgenstein u svom \textit{Tractatusu} tvrdi da logika pokazuje strukturu stvarnosti. Kada pišemo program, mi zapravo opisujemo moguće svjetove -- kombinacije stanja koje naš sustav može poprimiti. Svaka \texttt{if-else} struktura definira grananje između mogućih svjetova.
-
-Praktične primjene ove veze su svugdje oko nas. Sustavi za automatsko zaključivanje pomažu u medicinskoj dijagnostici. Formalna verifikacija osigurava ispravnost kritičnih sustava poput autopilota u zrakoplovima. Baze podataka koriste logiku predikata za učinkovito pretraživanje informacija.
+\section{Logika kao znanost o valjanom zaključivanju}
 
 
-\section*{Curry-Howard izomorfizam: Most između svjetova}
+Logika proučava oblike valjanog zaključivanja i relacije logičkog slijeda. Kada kažemo da je zaključak valjan, mislimo da konkluzija nužno slijedi iz premisa. Ova nužnost proizlazi iz same strukture našeg mišljenja, neovisno o sadržaju.
 
-Jedan od najfascinantnijih rezultata 20. stoljeća je otkriće da postoji duboka matematička veza između logičkih dokaza i računalnih programa. Ovu vezu, poznatu kao Curry-Howard izomorfizam, neovisno su otkrili Haskell Curry i William Alvin Howard.
 
-Izomorfizam pokazuje sljedeće ekvivalencije:
-\begin{align}
-\text{Logičke formule} &\leftrightarrow \text{Tipovi u programiranju}\\
-\text{Dokazi} &\leftrightarrow \text{Programi}\\
-\text{Normalizacija dokaza} &\leftrightarrow \text{Izvršavanje programa}
-\end{align}
+Razmotrimo klasičan primjer:
+\begin{enumerate}
+\item Svi ljudi su smrtni.
+\item Sokrat je čovjek.
+\item Dakle, Sokrat je smrtan.
+\end{enumerate}
 
-Što to znači? Svaki put kada pišete funkciju tipa \texttt{A -> B}, vi zapravo tvrdite da možete dokazati B iz A. Kada pozovete tu funkciju s argumentom tipa A, vi primjenjujete modus ponens!
 
-Razmotrimo konkretan primjer. Logička formula $P \rightarrow (Q \rightarrow P)$ kaže: ``Ako je P istinito, onda bez obzira na Q, P je istinito.'' U Pythonu, ova formula odgovara funkciji:
-\begin{verbatim}
-def konstanta(p):
-    def ignoriraj(q):
-        return p
-    return ignoriraj
-\end{verbatim}
+Valjanost ovog zaključka ne ovisi o tome tko je Sokrat ili što znači čovjek'' i smrtan''. Ona proizlazi iz logičke forme koja ostaje valjana čak i kad zamijenimo termine:
+\begin{enumerate}
+\item Svi $P$ su $Q$.
+\item $a$ je $P$.
+\item Dakle, $a$ je $Q$.
+\end{enumerate}
 
-Funkcija prima vrijednost \texttt{p} i vraća funkciju koja ignorira svoj argument i uvijek vraća \texttt{p}. To je dokaz logičke formule pretočen u program!
 
-\section*{Načini mišljenja: Logičko i računalno}
-
-Logičko i računalno mišljenje dijele ključne vještine:
-
-\textbf{Apstrakcija:} I logičari i programeri moraju identificirati bitne strukture i zanemariti nevažne detalje. Kada kažemo ``Svi ljudi su smrtni'', apstrahiramo od individualnih razlika. Kada pišemo funkciju, apstrahiramo od konkretnih vrijednosti.
-
-\textbf{Dekompozicija:} Složene probleme rastavljamo na jednostavnije. U logici, složene formule analiziramo kroz njihove komponente. U programiranju, velike programe gradimo od manjih funkcija.
-
-\textbf{Preciznost:} I logika i programiranje zahtijevaju precizno izražavanje. Dvosmislenost koja je prihvatljiva u svakodnevnom govoru može dovesti do pogrešnih zaključaka ili bugova u kodu.
-
-\textbf{Rekurzija:} Koncept koji je ključan u oba područja. U logici, možemo definirati beskonačne strukture pomoću konačnih pravila. U programiranju, rekurzivne funkcije omogućavaju elegantna rješenja složenih problema.
-
-\section*{Od temelja prema naprijed}
-
-Ovaj udžbenik vodi vas kroz postupno otkrivanje veze između logike i programiranja. Počinjemo s osnovama -- što su sudovi i kako ih kombinirati. Kroz Python implementacije, ove apstraktne koncepte činimo konkretnima i provjerljivima.
-
-Kako napredujete, otkrit ćete da logika nije samo teoretska disciplina. Ona je alat koji omogućava:
+Moderna simbolička logika omogućava nam precizno zapisivanje ovakvih formi. U logici sudova bavimo se veznicima:
 \begin{itemize}
-\item Jasnije razmišljanje o problemima
-\item Preciznije izražavanje ideja
-\item Sustavnije pristupanje složenim zadacima
-\item Pouzdanije zaključivanje
+\item Konjunkcija ($\wedge$): i'' \item Disjunkcija ($\vee$): ili''
+
+\item Implikacija ($\rightarrow$): ako...onda'' \item Negacija ($\neg$): nije''
 \end{itemize}
 
-Svaki koncept koji naučite ima direktnu primjenu u programiranju. Razumijevanje logike sudova pomaže u pisanju uvjetnih izraza. Logika predikata ključna je za rad s bazama podataka. Prirodna dedukcija povezana je s tipskim sustavima modernih programskih jezika.
 
-\section*{Poziv na istraživanje}
-
-Logika i programiranje nisu samo alati -- oni su načini razumijevanja svijeta. Kroz ovaj udžbenik, pozivamo vas da istražite kako formalni sustavi mogu opisati i stvarnost i mišljenje o stvarnosti.
-
-Svaka Jupyter bilježnica je laboratorij u kojem možete eksperimentirati. Mijenjajte kod, testirajte granične slučajeve, pokušajte slomiti sustave. Kroz ovo aktivno istraživanje, razvit ćete intuiciju koja je jednako važna kao i formalno znanje.
-
-Zapamtite: u logici, kao i u programiranju, greške su prilike za učenje. Kada program ne radi kako očekujete, ili kada zaključak nije valjan kako ste mislili, vi otkrivate suptilnosti logičkih principa. Ova otkrića su najvrjedniji dio učenja.
-
-Krenimo zajedno na ovo putovanje kroz logiku i kod, gdje svaki novi koncept otvara vrata dubljeg razumijevanja i načina na koji mislimo, zaključujemo i stvaramo.
-
-\section*{Tehničke napomene}
-
-Jupyter bilježnice omogućavaju nam jedinstveni pristup učenju logike. U istom dokumentu možemo kombinirati:
+Logika predikata ide dalje omogućavajući kvantifikaciju:
 \begin{itemize}
-\item LaTeX formule za precizno zapisivanje logičkih izraza
-\item Python kod za implementaciju i testiranje koncepata
-\item Vizualizacije koje čine apstraktne ideje jasnima
-\item Objašnjenja koja povezuju teoriju s praksom
+\item Univerzalni kvantifikator ($\forall$): ,,svi'', ,,svaki''
+\item Egzistencijalni kvantifikator ($\exists$): ,,neki'', ,,postoji''
 \end{itemize}
 
-Ovaj pristup omogućava interaktivno istraživanje.
-Umjesto pasivnog čitanja o modus ponensu, možete ga implementirati, testirati na različitim primjerima i vidjeti kako radi.
-Greške postaju prilike za učenje -- kada program ne radi kako očekujete, otkrivate nijanse logičkih pravila.
 
-Sve bilježnice iz kojih je nastala ova knjiga nalaze se na \url{https://github.com/dlauc/logikaukodu}, te se mogu pokrenuti lokalni ili na sustavima poput Google Colabb-a.
+\section{Formalni jezik misli}
+
+
+Gottlob Frege, utemeljitelj moderne logike, nastojao je stvoriti ..pojmovno pismo'' (\textit{Begriffsschrift}) -- formalni jezik za izražavanje čistog mišljenja, oslobođenog dvosmislenosti prirodnog jezika. Njegova vizija danas živi u programskim jezicima.
+
+
+Kada pišemo Python kod:
+\begin{verbatim}
+def je_smrtan(x):
+    return je_čovjek(x)
+
+assert je_smrtan("Sokrat") == True
+\end{verbatim}
+
+
+Mi formaliziramo logičku strukturu. Funkcija \texttt{je\_smrtan} enkodira univerzalnu tvrdnju, a \texttt{assert} provjerava konkretnu instancu.
+
+
+\section{Struktura stvarnosti: Wittgensteinova slika}
+
+
+Ludwig Wittgenstein u \textit{Tractatus Logico-Philosophicus} nudi radikalnu tezu: granice našeg jezika su granice našeg svijeta. Za njega, svijet je totalitet činjenica, ne stvari. Činjenice postoje u ..logičkom prostoru'' -- prostoru svih mogućih kombinacija.
+
+
+Ova ideja ima izravnu programsku interpretaciju. Kada definiramo Booleove varijable:
+\begin{verbatim}
+kiša = True
+sunce = False
+vjetar = True
+\end{verbatim}
+
+
+Definiramo točku u logičkom prostoru. Sa tri varijable, imamo $2^3 = 8$ mogućih svjetova. Svaki program implicitno definira takav prostor mogućnosti i pravila kretanja kroz njega.
+
+
+\section{Istina i značenje: Tarskijeva semantika}
+
+
+Alfred Tarski riješio je ancient problem istine kroz svoju semantičku teoriju. Njegova čuvena T-shema:
+
+
+..Snijeg je bijel'' je istinito ako i samo ako snijeg je bijel.
+
+
+Može se činiti trivijalnom, ali razlikuje jezik od metalanguage. U Pythonu:
+\begin{verbatim}
+def je_istinito(izjava, model):
+    return eval(izjava, model)
+
+model = {"snijeg_je_bijel": True}
+assert je_istinito("snijeg_je_bijel", model) == True
+\end{verbatim}
+
+
+Funkcija \texttt{je\_istinito} je metajezična -- ona govori \emph{o} izjavama, ne \emph{u} njima.
+
+
+\section{Dokazi kao programi: Curry-Howard izomorfizam}
+
+
+Jedan od najdubljih uvida 20. stoljeća je otkriće strukturne ekvivalencije između logičkih dokaza i računskih programa. Curry-Howard izomorfizam pokazuje:
+
+
+\begin{center}
+\begin{tabular}{l|l}
+\textbf{Logika} & \textbf{Programiranje} \\
+\hline
+Formula $A \rightarrow B$ & Tip funkcije \texttt{A -> B} \\
+Dokaz formule & Program tog tipa \\
+Modus ponens & Aplikacija funkcije \\
+Konjunkcija $A \wedge B$ & Tuple \texttt{(A, B)} \\
+Disjunkcija $A \vee B$ & Union type \texttt{A | B} \\
+\end{tabular}
+\end{center}
+
+
+Svaki put kad pišete funkciju, vi zapravo konstruirate dokaz. Svaki put kad je pozivate, primjenjujete logičko pravilo. Tipovi su teoremi, programi su dokazi!
+
+
+\section{Granice formalizma: Gödelova nepotpunost}
+
+
+Kurt Gödel je 1931. dokazao da svaki dovoljno bogat formalni sustav ili je nekonzistentan ili nepotpun. Postoje istinite tvrdnje koje se ne mogu dokazati unutar sustava.
+
+
+Njegov dokaz koristi genialnu samoreferenciju -- konstruira rečenicu koja kaže ..Ja nisam dokaziva''. Ako je dokaziva, sustav je nekonzistentan. Ako nije, sustav je nepotpun.
+
+
+U Pythonu možemo simulirati Gödelov trik:
+\begin{verbatim}
+def gödel_rečenica(n):
+    """Rečenica koja tvrdi da nije dokaziva"""
+    return f"Rečenica broj {n} nije dokaziva"
+
+
+\bf{Paradoks: ako je dokaziva, onda je lažna}
+
+\bf{Ako nije dokaziva, onda je istinita ali nedokaziva}
+
+\end{verbatim}
+
+
+\section{Računska složenost: Turingovi strojevi}
+
+
+Alan Turing definirao je precizni model računanja -- Turingov stroj. Pokazao je da postoje problemi koje nijedan stroj ne može riješiti, poput problema zaustavljanja.
+
+
+Python interpreter je zapravo Turingov stroj (tehnički Turing potpun jezik).
+Svaki program koji napišete je opis konačnog automata koji manipulira simbolima na ..traci'' (memoriji):
+
+\begin{verbatim}
+def turingov_stroj(traka, program, stanje=0):
+    while stanje != "STOP":
+        simbol = traka.pročitaj()
+        novo_stanje, novi_simbol, smjer = program[stanje][simbol]
+        traka.zapiši(novi_simbol)
+        traka.pomakni(smjer)
+        stanje = novo_stanje
+    return traka
+\end{verbatim}
+
+
+\section{Od dedukcije k indukciji}
+
+Klasična logika bavi se nužnim zaključcima. Ali većina našeg zaključivanja je probabilistička. David Hume primijetio je ..problem indukcije'' -- iz činjenice da je sunce izašlo svaki dan do sada, ne slijedi nužno da će izaći sutra.
+
+Bayesov teorem daje nam formalni okvir za induktivno zaključivanje:
+
+$$P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}$$
+
+
+Gdje je $P(H|E)$ posteriorna vjerojatnost hipoteze nakon evidencije.
+
+
+U Pythonu:
+\begin{verbatim}
+def bayes(prior, likelihood, evidence):
+return (likelihood * prior) / evidence
+
+
+\chapter*{Medicinska dijagnoza}
+
+p_bolest = 0.01  # 1% populacije ima bolest
+p_pozitivan_test_ako_bolest = 0.99  # 99% osjetljivost
+p_pozitivan_test = 0.05  # 5% ukupno pozitivnih
+
+
+p_bolest_ako_pozitivan = bayes(
+p_bolest,
+p_pozitivan_test_ako_bolest,
+p_pozitivan_test
+)
+
+
+\bf{Rezultat: 0.198 ili 19.8%}
+
+\end{verbatim}
+
+
+\section{Paradoksi i granice}
+
+
+Logika je puna paradoksa koji testiraju naše razumijevanje:
+
+
+\textbf{Russellov paradoks}: Skup svih skupova koji ne sadrže sebe. Sadrži li sebe?
+
+
+\textbf{Paradoks lažljivca}: ..Ova rečenica je neistinita.'' Istinita ili neistinita?
+
+
+\textbf{Sorites paradoks}: Jedna zrna pijeska nije hrpa. Dodavanje jednog zrna ne čini hrpu. Dakle, nikad nema hrpe?
+
+
+Ovi paradoksi nisu samo zagonetke -- oni otkrivaju fundamentalne limite formalnih sustava i potiču razvoj novih logika (parakontistentne, fuzzy, relevantne).
+
+
+\section{Primjena u stvarnom svijetu}
+
+
+Logika kroz kod nije samo akademska vježba. Primjene su svugdje:
+
+
+\textbf{Baze podataka} koriste logiku predikata (SQL je zapravo logički jezik):
+\begin{verbatim}
+SELECT * FROM studenti
+WHERE godina > 2 AND prosjek >= 4.0
+\end{verbatim}
+
+
+\textbf{Verifikacija softvera} dokazuje korektnost kritičnih sustava:
+\begin{verbatim}
+@requires(x >= 0)
+@ensures(rezultat >= 0)
+def korijen(x):
+    return sqrt(x)
+\end{verbatim}
+
+
+\textbf{Umjetna inteligencija} koristi logičko zaključivanje za planiranje i donošenje odluka.
+
+
+
+
+\section{Putovanje koje slijedi}
+
+
+Ovaj udžbenik vodi vas kroz postupno otkrivanje veze između logike i koda. Svaki koncept gradit ćemo od temelja:
+
+
+\begin{enumerate}
+\item \textbf{Intuicija}: Zašto je koncept važan?
+\item \textbf{Formalizacija}: Precizna matematička definicija
+\item \textbf{Implementacija}: Radni Python kod
+\item \textbf{Eksploracija}: Eksperimenti i varijacije
+\end{enumerate}
+
+
+Ne učite samo \emph{o} logici -- prakticirajte logiku kroz kod. Svaka Jupyter bilježnica je laboratorij. Mijenjajte parametre, testirajte granične slučajeve, pokušajte slomiti sustave. Kroz ove eksperimente razvit ćete dublju intuiciju od pukog čitanja.
+
+
+Zapamtite: u logici, kao i u programiranju, jedini način učenja je činjenjem. Greške su dragocjene -- one otkrivaju skrivene pretpostavke i suptilne istine.
+
+
+Započnimo ovo putovanje kroz svjetove logike, gdje svaki novi koncept otvara vrata dubljeg razumijevanja načina na koji mislimo, zaključujemo i stvaramo.
+

@@ -2,6 +2,7 @@
 """
 Optimized Jupyter Notebook to LaTeX Converter
 Focuses on clean architecture, performance, and proper math symbol conversion.
+Enhanced with quotation recognition and title number removal.
 """
 
 import json
@@ -114,7 +115,7 @@ class ProtectedContent:
     def restore_all(self, text: str) -> str:
         """Restore all protected content."""
         for i, content in enumerate(self.protected_items):
-            for tag in ["PROTECTED", "MATH", "QUOTE", "DOLLAR"]:
+            for tag in ["PROTECTED", "MATH", "QUOTE", "DOLLAR", "BLOCKQUOTE"]:
                 text = text.replace(f"__{tag}_{i}__", content)
         return text
 
@@ -132,9 +133,11 @@ class OptimizedMathProcessor:
         self.display_math_pattern = re.compile(r'\\\[.*?\\\]|\$\$.*?\$\$', re.DOTALL)
         self.inline_math_pattern = re.compile(r'\$(?!\$)[^$]+?\$')
 
-        # Quote patterns
+        # Quote patterns - poboljšano prepoznavanje citata
         self.double_quote_pattern = re.compile(r'"[^"\n]*"')
         self.single_quote_pattern = re.compile(r"'[^'\n]*'")
+        self.latex_quote_pattern = re.compile(r'\\begin\{quote\}.*?\\end\{quote\}', re.DOTALL)
+        self.latex_quotation_pattern = re.compile(r'\\begin\{quotation\}.*?\\end\{quotation\}', re.DOTALL)
 
         # Math detection pattern
         all_cmds = sorted({
@@ -162,7 +165,7 @@ class OptimizedMathProcessor:
 
         protector = ProtectedContent()
 
-        # Phase 1: Protect existing math environments and quotes
+        # Phase 1: Protect existing math environments, quotes and LaTeX quotations
         text = self._protect_existing_math(text, protector)
 
         # Phase 2: Convert symbols (only outside protected areas)
@@ -180,7 +183,15 @@ class OptimizedMathProcessor:
         return text
 
     def _protect_existing_math(self, text: str, protector: ProtectedContent) -> str:
-        """Protect existing math environments and quoted content."""
+        """Protect existing math environments, quoted content and LaTeX quotations."""
+        # Protect LaTeX quotations first
+        text = self.latex_quote_pattern.sub(
+            lambda m: protector.protect(m.group(0), "BLOCKQUOTE"), text
+        )
+        text = self.latex_quotation_pattern.sub(
+            lambda m: protector.protect(m.group(0), "BLOCKQUOTE"), text
+        )
+
         # Protect display math
         text = self.display_math_pattern.sub(
             lambda m: protector.protect(m.group(0), "MATH"), text
@@ -313,13 +324,17 @@ class OptimizedMarkdownProcessor:
     def _compile_patterns(self):
         """Precompile regex patterns."""
         self.header_empty = re.compile(r'^#{1,6}\s*$', re.MULTILINE)
-        self.header_content = re.compile(r'^(#{1,6})\s+(.+)$', re.MULTILINE)
+        # Poboljšan pattern za uklanjanje brojeva s početka naslova
+        self.header_content = re.compile(r'^(#{1,6})\s+(?:\d+\.?\d*\.?\s*)?(.+)$', re.MULTILINE)
         self.display_math = re.compile(r'\$\$(.*?)\$\$', re.DOTALL)
         self.bold = re.compile(r'\*\*([^\*]+?)\*\*')
         self.italic = re.compile(r'(?<!\*)\*([^\*]+)\*(?!\*)')
         self.inline_code = re.compile(r'`([^`]+)`')
         self.link = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
         self.list_item = re.compile(r'^(\s*)([-*+]|\d+\.)\s+(.+)$')
+        # Novi pattern za markdown blockquote
+        self.blockquote = re.compile(r'^>\s+(.+)$', re.MULTILINE)
+        self.multiline_blockquote = re.compile(r'^((?:>\s*.+\n?)+)', re.MULTILINE)
 
     def process(self, content: str) -> str:
         """Convert markdown to LaTeX."""
@@ -327,6 +342,7 @@ class OptimizedMarkdownProcessor:
             return ''
 
         # Process in optimized order
+        content = self._convert_blockquotes(content)  # Novo - obradi citate
         content = self._convert_headers(content)
         content = self._convert_display_math(content)
         content = self._convert_emphasis(content)
@@ -339,15 +355,39 @@ class OptimizedMarkdownProcessor:
 
         return content
 
+    def _convert_blockquotes(self, text: str) -> str:
+        """Convert markdown blockquotes to LaTeX quote environment."""
+
+        def replace_blockquote(match):
+            # Izvuci sve linije koje počinju sa >
+            lines = match.group(1).split('\n')
+            cleaned_lines = []
+            for line in lines:
+                if line.startswith('>'):
+                    # Ukloni > i razmake s početka
+                    cleaned_lines.append(line.lstrip('>').strip())
+
+            quote_content = '\n'.join(cleaned_lines)
+            return f'\\begin{{quote}}\n{quote_content}\n\\end{{quote}}'
+
+        # Obradi višelinijske blockquote
+        text = self.multiline_blockquote.sub(replace_blockquote, text)
+
+        return text
+
     def _convert_headers(self, text: str) -> str:
-        """Convert markdown headers to LaTeX sections."""
+        """Convert markdown headers to LaTeX sections, removing leading numbers."""
         # Remove empty headers
         text = self.header_empty.sub('', text)
 
-        # Convert headers with content
+        # Convert headers with content, removing numbers
         def replace_header(match):
             level = len(match.group(1))
-            title = match.group(2)
+            title = match.group(2).strip()
+
+            # Dodatno uklanjanje brojeva ako nisu uhvaćeni regex-om
+            # Uklanja pattern poput "1.", "1.1", "1.1.1", itd. s početka
+            title = re.sub(r'^\d+(?:\.\d+)*\.?\s*', '', title).strip()
 
             commands = {
                 1: 'section', 2: 'subsection', 3: 'subsubsection',
@@ -505,6 +545,7 @@ class JupyterToLatexConverter:
 % \\usepackage{{minted}}
 % \\usepackage{{tcolorbox}}
 % \\usepackage{{hyperref}}
+% \\usepackage{{csquotes}}  % Za citate
 % \\definecolor{{bg}}{{rgb}}{{0.95,0.95,0.95}}
 % Compile with: pdflatex -shell-escape yourfile.tex"""
 
@@ -614,6 +655,5 @@ def main():
 
 
 if __name__ == '__main__':
-    import sys
 
-    sys.exit(main())
+    main()

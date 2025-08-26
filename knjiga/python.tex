@@ -121,9 +121,7 @@ U filozofskim tekstovima, često nailazimo na nabrajanja ili nizove ideja, poput
 \begin{primjerokvir}
     Kreiranje i pristupanje elementima liste.
     \begin{pythoncode}
-
-## Lista Aristotelovih uzroka
-aristoteloviuzroci = ["materijalni", "formalni", "djelatni", "svršni"]
+aristoteloviuzroci = ["materijalni", "formalni", "djelatni", "svršni"] # Popiy Aristotelovih uzroka
 
 # Pristupanje elementima pomoću indeksa
 # Indeksiranje počinje od 0!
@@ -133,6 +131,7 @@ treciuzrok = aristoteloviuzroci[2]
 print("Prvi uzrok je:", prviuzrok)
 print("Treći uzrok je:", treciuzrok)
     \end{pythoncode}
+
     \begin{codeoutput}
 Prvi uzrok je: materijalni
 Treći uzrok je: djelatni
@@ -141,8 +140,7 @@ Treći uzrok je: djelatni
     Liste su promjenjive. Možemo im dodavati nove elemente metodom \pyinline{append()} ili uklanjati postojeće metodom \pyinline{remove()}.
 
     \begin{pythoncode}
-# Dodavanje petog, "imaginarnog" uzroka
-aristoteloviuzroci.append("imaginarni")
+aristoteloviuzroci.append("imaginarni") # Dodavanje petog, "imaginarnog" uzroka
 print(aristoteloviuzroci)
 
 # Uklanjanje "imaginarnog" uzroka
@@ -239,7 +237,6 @@ stoickevrline = ["mudrost", "pravednost", "hrabrost", "umjerenost"]
 
 print("Prema stoicima, temeljne vrline su:")
 for vrlina in stoickevrline:
-
     print("- " + vrlina)
     \end{pythoncode}
     \begin{codeoutput}
@@ -310,8 +307,7 @@ Sada ćemo primijeniti sve što smo naučili na konkretnom primjeru: analizi kra
 \begin{primjerokvir}
     Brojanje riječi u tekstu.
     \begin{pythoncode}
-# Korak 1: Definiramo tekst za analizu
-tekst = "Mislim, dakle jesam. Jesam, dakle postojim."
+tekst = "Mislim, dakle jesam. Jesam, dakle postojim." # Korak 1: Definiramo tekst za analizu
 print("Originalni tekst:", tekst)
 
 # Korak 2: Priprema teksta
