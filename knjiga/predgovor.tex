@@ -1,61 +1,53 @@
 \chapter*{Predgovor}
 \addcontentsline{toc}{chapter}{Predgovor}
 
-Ovaj udžbenik nastao je iz više godina predavanja kolegija „Logika i programiranje" na Filozofskom fakultetu
+Ovaj udžbenik nastao je na temelju višegodišnjih predavanja na kolegiju „Logika i programiranje" na Filozofskom fakultetu
 Sveučilišta u Zagrebu.
-Kroz godine rada sa studentima filozofije koji su prvi put pisali kod,
+Kroz godine rada sa studentima filozofije koji su po prvi put pisali kod,
 kao i sa studentima informatike koji su otkrivali filozofske temelje svojih programa,
-kristalizirao se  pristup koji spaja apstraktno i konkretno, teoriju i praksu.
+oblikovao se  pristup koji spaja apstraktno i konkretno, teoriju i praksu.
 
-\section*{Geneza projekta}
-
-Početna ideja bila je jednostavna: učiniti formalnu logiku opipljivom i zanimljivijom, omogućiti transfer vještina između formalne logike i programskih vještina,
+Početna ideja bila je jednostavna: učiniti formalnu logiku pristupačnijom i zanimljivijom, omogućiti transfer vještina između formalne logike i programskih vještina,
 te pružiti studentima filozofije dodatne ,,zapošljive'' vještine.
 Umjesto da studenti samo vježbaju izvode prirodne dedukcije, zašto ih ne bi implementirali i tako bolje razumjeli?
 Umjesto da crtaju istinosne tablice na papiru, zašto ih ne bi generirali programski?
-Ono što je počelo kao eksperiment, pretvorilo se u potpuno novi način podućavanja logike.
-
-\section*{Struktura udžbenika}
+Ono što je počelo kao istraživanje, pretvorilo se u potpuno novi način podučavanja logike.
 
 Knjiga je organizirana u dva komplementarna dijela:
 
-\textbf{Prvi dio – Svjetovi deduktivne logike} pokriva klasične sustave gdje zaključci nužno slijede iz premisa. Počinjemo s Wittgensteinovom slikom svijeta kao skupa činjenica, prelazimo na Gentzenove sustave prirodne dedukcije, istražujemo Tarskijevu semantiku, te završavamo s računskim aspektima kroz Turingove strojeve.
+\textbf{Prvi dio – Svjetovi deduktivne logike} pokriva klasične sustave gdje zaključci nužno slijede iz premisa. Počinjemo s Wittgensteinovom slikom svijeta kao skupa činjenica, prelazimo na Gentzenove sustave prirodne dedukcije, istražujemo Tarskijevu semantiku, te završavamo s računalnim aspektima kroz Turingove strojeve.
 
-\textbf{Drugi dio – Svjetovi induktivnih logika} istražuje sustave gdje zaključci imaju samo određeni stupanj vjerojatnosti. Od Pascalove oklade preko Bayesova teorema do suvremenih pristupa u strojnom učenju.
+\textbf{Drugi dio – Svjetovi induktivnih logika} istražuje sustave gdje zaključci imaju samo određeni stupanj vjerojatnosti: od Pascalove oklade preko Bayesova teorema do suvremenih pristupa u strojnom učenju.
 
-Svako poglavlje slijedi konzistentnu strukturu: motivacija, formalizacija, implementacija, eksploracija.
-Ova četverodijelna struktura omogućava različite razine angažmana – od površnog upoznavanja do dubinskog istraživanja.
+Svako poglavlje slijedi konzistentnu strukturu: motivacija, formalizacija, implementacija, istraživanje.
+Ova četverodijelna struktura omogućava različite razine angažmana – od prvotnog upoznavanja do dubinskog istraživanja.
 Neki djelovi se djelomično preklapaju radi održavanja cjeline studenskih izlaganja.
 
-\subsection*{Pedagoški pristup}
 
-Kroz godine predavanja, razvio sam nekoliko ključnih principa:
+Kao pedagoški pristup, kroz godine predavanja, razvijeno je nekoliko ključnih principa:
 
 \textbf{Greške su pedagoški momenti.} Kada studentov kod ne radi, to nije neuspjeh već prilika za razumijevanje zašto logička pravila funkcioniraju kako funkcioniraju.
 
-\textbf{Apstrakcija kroz konkretno.} Svaki apstraktni koncept ima konkretnu implementaciju koju možete pokrenuti,
+\textbf{Apstrakcija kroz konkretno.} Svaki apstraktni koncept ima konkretnu implementaciju koju je moguće pokrenuti,
 modificirati i igrati se s njom.
 
-\textbf{Spiralno učenje.} Isti koncepti vraćaju se na različitim razinama složenosti. I
-mplikacija se prvo pojavljuje kao Python \texttt{if-then}, zatim kao materijalna kondicionala,
+\textbf{Spiralno učenje.} Isti koncepti vraćaju se na različitim razinama složenosti. Implikacija se prvo pojavljuje kao Python \texttt{if-then}, zatim kao materijalna implikacija,
 pa kao pravilo u prirodnoj dedukciji, i konačno kao tip funkcije, i metalogički odnos.
 
-\section*{Za koga je ova knjiga?}
 
-Primarno, za studente filozofije koji žele razumjeti formalnu logiku kroz praktičnu primjenu.
+Na pitanje za koga je ova knjiga, odgovor je da je primarno nastala za studente filozofije koji žele razumjeti formalnu logiku kroz praktičnu primjenu.
 Ali kroz godine, publika se proširila:
 
 - Studenti računarstva pronalaze filozofske temelje svoje discipline
 - Nastavnici srednji škola koriste materijale za modernizaciju nastave
 - Istraživači u AI-ju pronalaze korisne implementacije klasičnih sustava
-- Autodidakti koji uživaju u samostalnom istraživanju
+- Entuzijasti koji uživaju u samostalnom istraživanju
 
-Ne pretpostavljamo prethodno znanje programiranja – dodatak A pruža sve potrebne osnove Pythona.
-Također ne pretpostavljamo formalno obrazovanje iz logike – gradimo od temelja.
+Ne pretpostavlja se prethodno znanje programiranja – dodatak A pruža sve potrebne osnove Pythona.
+Također ne pretpostavlja se formalno obrazovanje iz logike – počinje se od osnova.
 
-\section*{Kako koristiti materijale}
 
-Sav kod dostupan je na \texttt{https://github.com/dlauc/logikaukodu}. Bilježnice možete:
+Kako koristiti materijale: sav kod dostupan je na \texttt{https://github.com/dlauc/logikaukodu}. Bilježnice možete:
 - Pokretati lokalno s Jupyter instalacijom
 - Koristiti kroz Google Colab bez instalacije
 - Modificirati za vlastite potrebe
@@ -63,13 +55,12 @@ Sav kod dostupan je na \texttt{https://github.com/dlauc/logikaukodu}. Bilježnic
 
 Licenca \em{Creative Commons} omogućava slobodno dijeljenje i adaptaciju uz navođenje izvora.
 
-\section*{Napomena o budućnosti}
 
-Ovaj udžbenik nije završen proizvod već živi dokument. Svaki semestar donosi nove uvide, nove načine objašnjavanja,
+Konačno, ovaj udžbenik nije završen proizvod. Svaki semestar donosi nove uvide, nove načine objašnjavanja,
 nove veze između koncepata.
-Pozivam čitatelje da se uključe na djeljenji kod – prijavite greške, predložite poboljšanja, podijelite svoje implementacije.
+Pozivam čitatelje da se priključe korištenjem dijeljenog koda – prijavite greške, predložite poboljšanja, podijelite svoje implementacije.
 Logika i programiranje nisu samo akademske discipline – oni su načini mišljenja koji oblikuju našu digitalnu stvarnost.
-Nadam se da će ova knjiga pomoći novim generacijama da ovladaju oba.
+Nadam se da će ova knjiga pomoći novim generacijama da ovladaju oboma.
 
 \vspace{1cm}
 \begin{flushright}

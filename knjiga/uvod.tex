@@ -2,7 +2,7 @@
 % Modificirani uvod.tex - čisti LaTeX format
 
 
-\epigraph{Ne priliči izvrsnim ljudima da kao robovi gube sate na računanje, koji se posao može sa punim povjerenjem prepustiti bilo kome drugome uporabom strojeva.}{Gottfried Wilhelm Leibniz\footnotemark}
+\epigraph{Ne priliči izvrsnim ljudima da kao robovi gube sate na računanje, u poslu koji se može s punim povjerenjem prepustiti bilo kome drugome uporabom strojeva.}{Gottfried Wilhelm Leibniz\footnotemark}
 \footnotetext{\emph{Machina Arithmetica in qua non Aditio tantum Subtractio 1685}, slobodni prijevod s engleskog prijevoda}
 
 
@@ -58,7 +58,7 @@ assert je_smrtan("Sokrat") == True
 \end{verbatim}
 
 
-Mi formaliziramo logičku strukturu. Funkcija \texttt{je\_smrtan} enkodira univerzalnu tvrdnju, a \texttt{assert} provjerava konkretnu instancu.
+formaliziramo logičku strukturu. Funkcija \texttt{je\_smrtan} enkodira univerzalnu tvrdnju, a \texttt{assert} provjerava konkretnu instancu.
 
 
 \section{Struktura stvarnosti: Wittgensteinova slika}
@@ -75,19 +75,19 @@ vjetar = True
 \end{verbatim}
 
 
-Definiramo točku u logičkom prostoru. Sa tri varijable, imamo $2^3 = 8$ mogućih svjetova. Svaki program implicitno definira takav prostor mogućnosti i pravila kretanja kroz njega.
+definiramo točku u logičkom prostoru. S tri varijable, imamo $2^3 = 8$ mogućih svjetova. Svaki program implicitno definira takav prostor mogućnosti i pravila kretanja kroz njega.
 
 
 \section{Istina i značenje: Tarskijeva semantika}
 
 
-Alfred Tarski riješio je ancient problem istine kroz svoju semantičku teoriju. Njegova čuvena T-shema:
+Alfred Tarski riješio je drevni problem istine kroz svoju semantičku teoriju. Njegova čuvena T-shema:
 
 
 ..Snijeg je bijel'' je istinito ako i samo ako snijeg je bijel.
 
 
-Može se činiti trivijalnom, ali razlikuje jezik od metalanguage. U Pythonu:
+Može se činiti trivijalnom, ali razlikuje jezik od metajezika. U Pythonu:
 \begin{verbatim}
 def je_istinito(izjava, model):
     return eval(izjava, model)
@@ -97,13 +97,13 @@ assert je_istinito("snijeg_je_bijel", model) == True
 \end{verbatim}
 
 
-Funkcija \texttt{je\_istinito} je metajezična -- ona govori \emph{o} izjavama, ne \emph{u} njima.
+funkcija \texttt{je\_istinito} je metajezična -- ona govori \emph{o} izjavama, ne \emph{u} njima.
 
 
 \section{Dokazi kao programi: Curry-Howard izomorfizam}
 
 
-Jedan od najdubljih uvida 20. stoljeća je otkriće strukturne ekvivalencije između logičkih dokaza i računskih programa. Curry-Howard izomorfizam pokazuje:
+Jedan od najdubljih uvida 20. stoljeća je otkriće strukturne ekvivalencije između logičkih dokaza i programa. Curry-Howard izomorfizam pokazuje:
 
 
 \begin{center}
@@ -128,10 +128,10 @@ Svaki put kad pišete funkciju, vi zapravo konstruirate dokaz. Svaki put kad je 
 Kurt Gödel je 1931. dokazao da svaki dovoljno bogat formalni sustav ili je nekonzistentan ili nepotpun. Postoje istinite tvrdnje koje se ne mogu dokazati unutar sustava.
 
 
-Njegov dokaz koristi genialnu samoreferenciju -- konstruira rečenicu koja kaže ..Ja nisam dokaziva''. Ako je dokaziva, sustav je nekonzistentan. Ako nije, sustav je nepotpun.
+Njegov dokaz koristi samoreferenciranje -- konstruira rečenicu koja kaže ..Ja nisam dokaziva''. Ako je dokaziva, sustav je nekonzistentan. Ako nije, sustav je nepotpun.
 
 
-U Pythonu možemo simulirati Gödelov trik:
+U Pythonu možemo ilustrirati Gödelov trik:
 \begin{verbatim}
 def gödel_rečenica(n):
     """Rečenica koja tvrdi da nije dokaziva"""
@@ -140,12 +140,12 @@ def gödel_rečenica(n):
 
 \bf{Paradoks: ako je dokaziva, onda je lažna}
 
-\bf{Ako nije dokaziva, onda je istinita ali nedokaziva}
+\bf{Ako nije dokaziva, onda je istinita, ali nedokaziva}
 
 \end{verbatim}
 
 
-\section{Računska složenost: Turingovi strojevi}
+\section{Turingovi strojevi}
 
 
 Alan Turing definirao je precizni model računanja -- Turingov stroj. Pokazao je da postoje problemi koje nijedan stroj ne može riješiti, poput problema zaustavljanja.
@@ -168,7 +168,7 @@ def turingov_stroj(traka, program, stanje=0):
 
 \section{Od dedukcije k indukciji}
 
-Klasična logika bavi se nužnim zaključcima. Ali većina našeg zaključivanja je probabilistička. David Hume primijetio je ..problem indukcije'' -- iz činjenice da je sunce izašlo svaki dan do sada, ne slijedi nužno da će izaći sutra.
+Klasična logika bavi se nužnim zaključcima. Ali većina našeg zaključivanja je probabilistička. David Hume primijetio je ,,problem indukcije'' -- iz činjenice da je sunce izašlo svaki dan do sada, ne slijedi nužno da će izaći sutra.
 
 Bayesov teorem daje nam formalni okvir za induktivno zaključivanje:
 
@@ -251,7 +251,7 @@ def korijen(x):
 \section{Putovanje koje slijedi}
 
 
-Ovaj udžbenik vodi vas kroz postupno otkrivanje veze između logike i koda. Svaki koncept gradit ćemo od temelja:
+Ovaj udžbenik vodi vas kroz postupno otkrivanje veze između logike i programiranja. Svaki koncept gradit ćemo od temelja:
 
 
 \begin{enumerate}
@@ -262,7 +262,7 @@ Ovaj udžbenik vodi vas kroz postupno otkrivanje veze između logike i koda. Sva
 \end{enumerate}
 
 
-Ne učite samo \emph{o} logici -- prakticirajte logiku kroz kod. Svaka Jupyter bilježnica je laboratorij. Mijenjajte parametre, testirajte granične slučajeve, pokušajte slomiti sustave. Kroz ove eksperimente razvit ćete dublju intuiciju od pukog čitanja.
+Ne učite samo \emph{o} logici -- prakticirajte logiku kroz kod. Svaka Jupyter bilježnica je laboratorij. Mijenjajte parametre, testirajte granične slučajeve, pokušajte pokvariti kod. Kroz ove eksperimente razvit ćete dublju intuiciju od pukog čitanja.
 
 
 Zapamtite: u logici, kao i u programiranju, jedini način učenja je činjenjem. Greške su dragocjene -- one otkrivaju skrivene pretpostavke i suptilne istine.
