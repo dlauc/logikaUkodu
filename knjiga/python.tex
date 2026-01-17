@@ -1,6 +1,6 @@
 
-\chapter{Uvod u Python za studente filozofije i ostalih ne-tehničkih grupa)}
-\label{chap:Uvod u Pzthon}
+\chapter{Uvod u Python za studente filozofije i ostalih ne-tehničkih grupa}
+\label{chap:uvod-u-python}
 
 \section{Zašto bi se filozof zanimao za programiranje?}
 
@@ -25,7 +25,7 @@ U filozofiji, često koristimo simbole ili nazive kako bismo predstavili složen
 
 Varijablu možete zamisliti kao oznaku koju pridružujete nekoj vrijednosti. Operator dodjele, znak jednakosti (\pyinline{=}), koristi se za dodjeljivanje vrijednosti varijabli.
 
-\begin{primjerokvir}
+
     Dodjeljivanje vrijednosti varijablama.
     \begin{pythoncode}
 pozdrav = "Zdravo, svijete!"
@@ -41,7 +41,7 @@ print(godinarodenjakanta)
 Zdravo, svijete!
 1724
     \end{codeoutput}
-\end{primjerokvir}
+
 
 
 \subsection{Tipovi podataka: Različite vrste informacija}
@@ -56,26 +56,26 @@ U filozofiji, razlikujemo različite vrste pojmova: konkretne, apstraktne, pojed
 
 \pyinline{Python} je dinamički tipiziran jezik, što znači da ne moramo unaprijed deklarirati tip varijable. Interpretator automatski prepoznaje tip podatka kada dodijelimo vrijednost. Tip varijable možemo provjeriti pomoću ugrađene funkcije \pyinline{type()}.
 
-\begin{primjerokvir}
     Provjera tipova podataka.
-    \begin{pythoncode}
-filozof = "Aristotel"
-godinarodenja = -384
-visinaumetrima = 1.7
-jeliziv = False
 
-print(type(filozof))
-print(type(godinarodenja))
-print(type(visinaumetrima))
-print(type(jeliziv))
-    \end{pythoncode}
+    \begin{pythoncode}
+    filozof = "Aristotel"
+    godinarodenja = -384
+    visinaumetrima = 1.7
+    jeliziv = False
+
+    print(type(filozof))
+    print(type(godinarodenja))
+    print(type(visinaumetrima))
+    print(type(jeliziv))
+        \end{pythoncode}
+
     \begin{codeoutput}
 <class 'str'>
 <class 'int'>
 <class 'float'>
 <class 'bool'>
     \end{codeoutput}
-\end{primjerokvir}
 
 \subsection{Izrazi: Kombiniranje vrijednosti}
 
@@ -118,7 +118,6 @@ U filozofskim tekstovima, često nailazimo na nabrajanja ili nizove ideja, poput
     \textbf{Lista} (\pyinline{list}) je promjenjiva, uređena kolekcija elemenata. "Uređena" znači da elementi zadržavaju redoslijed kojim su dodani. "Promjenjiva" znači da možemo dodavati, uklanjati ili mijenjati elemente nakon što je lista stvorena.
 \end{definicijaokvir}
 
-\begin{primjerokvir}
     Kreiranje i pristupanje elementima liste.
     \begin{pythoncode}
 aristoteloviuzroci = ["materijalni", "formalni", "djelatni", "svršni"] # Popiy Aristotelovih uzroka
@@ -148,10 +147,10 @@ aristoteloviuzroci.remove("imaginarni")
 print(aristoteloviuzroci)
     \end{pythoncode}
     \begin{codeoutput}
-['materijalni', 'formalni', 'djelatni', 'svršni', 'imaginarni']
+['materijalni', 'formalni', 'djelatni', 'svršni',
+ 'imaginarni']
 ['materijalni', 'formalni', 'djelatni', 'svršni']
     \end{codeoutput}
-\end{primjerokvir}
 
 \subsection{Rječnici: Asocijativni parovi pojmova i definicija}
 
@@ -163,7 +162,6 @@ U filozofiji, često definiramo pojmove tako da im pridružujemo njihove definic
 
 Rječnici se definiraju unutar vitičastih zagrada \pyinline{{}}, a parovi ključ-vrijednost odvojeni su dvotočkom.
 
-\begin{primjerokvir}
     Kreiranje i korištenje rječnika.
     \begin{pythoncode}
 filozofskirjecnik = {
@@ -184,18 +182,16 @@ print(filozofskirjecnik["logika"])
 grana filozofije koja se bavi moralom
 znanost o metodama i principima ispravnog zaključivanja
     \end{codeoutput}
-\end{primjerokvir}
 
 \section{Kontrola toka: Usmjeravanje argumentacije}
 \label{sec:kontrolatoka}
 
 Programi se ne izvršavaju uvijek linearno, od prve do zadnje naredbe. \textbf{Kontrola toka} odnosi se na naredbe koje nam omogućuju da usmjeravamo tijek izvršavanja programa, donosimo odluke i ponavljamo operacije.
 
-\subsection{Uvjetno izvršavanje: \pyinline{if}, \pyinline{elif}, \pyinline{else}}
+\subsection{\texorpdfstring{Uvjetno izvršavanje: \pyinline{if}, \pyinline{elif}, \pyinline{else}}{Uvjetno izvršavanje: if, elif, else}}
 
 U filozofskoj argumentaciji, često koristimo uvjetne rečenice oblika "Ako $\logsud{P}$, onda $\logsud{Q}$". U \pyinline{Python}u, \textbf{uvjetne naredbe} nam omogućuju da izvršimo određeni dio koda samo ako je zadovoljen neki uvjet. Uvjet je izraz koji se evaluira kao \pyinline{True} ili \pyinline{False}.
 
-\begin{primjerokvir}
     Korištenje \pyinline{if-else} strukture.
     \begin{pythoncode}
 tvrdnja = "Sokrat je smrtan"
@@ -220,17 +216,16 @@ elif 476 <= godina < 1500:
     print("Srednjovjekovna filozofija")
 else:
     print("Moderna i suvremena filozofija")
-    \end{codeoutput}
+    \end{pythoncode}
     \begin{codeoutput}
 Moderna i suvremena filozofija
     \end{codeoutput}
-\end{primjerokvir}
 
-\subsection{Ponavljanje: \pyinline{for} petlja}
+
+\subsection{\texorpdfstring{Ponavljanje: \pyinline{for} petlja}{Ponavljanje: for petlja}}
 
 Često je potrebno ponoviti istu radnju više puta. Na primjer, analizirati svaku riječ u rečenici. U \pyinline{Python}u, \textbf{\pyinline{for} petlja} nam omogućuje da iteriramo (prolazimo) kroz elemente sekvence (poput liste ili stringa) i za svaki element izvršimo određeni blok koda.
 
-\begin{primjerokvir}
     Iteriranje kroz listu pomoću \pyinline{for} petlje.
     \begin{pythoncode}
 stoickevrline = ["mudrost", "pravednost", "hrabrost", "umjerenost"]
@@ -248,7 +243,6 @@ Prema stoicima, temeljne vrline su:
     \end{codeoutput}
 
     U ovom primjeru, varijabla \pyinline{vrlina} se naziva \textit{varijabla petlje}. U svakom prolasku (iteraciji) kroz petlju, ona poprima vrijednost sljedećeg elementa iz liste \pyinline{stoickevrline}.
-\end{primjerokvir}
 
 \section{Funkcije: Modularizacija i ponovna upotreba misli}
 \label{sec:funkcije}
@@ -261,7 +255,6 @@ U filozofiji, kompleksne ideje često razlažemo na manje, razumljivije dijelove
 
 Funkcije definiramo pomoću ključne riječi \pyinline{def}.
 
-\begin{primjerokvir}
     Definiranje i pozivanje jednostavne funkcije.
     \begin{pythoncode}
 def pozdravifilozofa(ime):
@@ -280,11 +273,9 @@ Pozdrav, Platon!
 Pozdrav, Nietzsche!
     \end{codeoutput}
     Tekst unutar trostrukih navodnika odmah nakon definicije funkcije naziva se \textit{docstring} i služi kao dokumentacija funkcije.
-\end{primjerokvir}
 
 Funkcije mogu vraćati vrijednost pomoću naredbe \pyinline{return}. Vraćena vrijednost se tada može pohraniti u varijablu ili koristiti u daljnjim izrazima.
 
-\begin{primjerokvir}
     Funkcija koja vraća vrijednost.
     \begin{pythoncode}
 def sastaviime(ime, prezime):
@@ -297,14 +288,13 @@ print(punoimefilozofa)
     \begin{codeoutput}
 Simone de Beauvoir
     \end{codeoutput}
-\end{primjerokvir}
 
 \section{Primjer iz prakse: Analiza filozofskog teksta}
 \label{sec:primjerprakse}
 
 Sada ćemo primijeniti sve što smo naučili na konkretnom primjeru: analizi kratkog filozofskog teksta. Cilj nam je prebrojati koliko se puta svaka riječ pojavljuje u poznatoj Descartesovoj izreci.
 
-\begin{primjerokvir}
+
     Brojanje riječi u tekstu.
     \begin{pythoncode}
 tekst = "Mislim, dakle jesam. Jesam, dakle postojim." # Korak 1: Definiramo tekst za analizu
@@ -350,7 +340,7 @@ Frekvencija riječi:
 'postojim': 1
     \end{codeoutput}
     Ovaj primjer integrira varijable, stringove i njihove metode (\pyinline{.lower()}, \pyinline{.replace()}, \pyinline{.split()}), liste, rječnike, \pyinline{for} petlju i \pyinline{if-else} uvjetnu logiku kako bi se riješio konkretan problem iz domene analize teksta.
-\end{primjerokvir}
+
 
 \section*{Vježbe za poglavlje \ref{chap:uvod}}
 

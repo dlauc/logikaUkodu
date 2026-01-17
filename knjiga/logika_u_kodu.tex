@@ -35,18 +35,28 @@
 %  \end{tcolorbox}%
 %}
 \newtcolorbox{codeoutput}{
+    enhanced,
     colback=gray!10,
-    colframe=gray!50,
+    colframe=gray!40,
     breakable,
     fonttitle=\bfseries,
     title=Izlaz:,
     before upper=\small\ttfamily,
     sharp corners,
-    boxrule=1pt,
+    boxrule=0.5pt,
     left=2mm,
     right=2mm,
     top=2mm,
     bottom=2mm
+}
+
+% Output box environment for chapter files (with breakable)
+\newtcolorbox{outputbox}{
+    enhanced,
+    breakable,
+    title=Output,
+    colback=gray!5!white,
+    colframe=gray!75!black
 }
 
 % Grafika i boje
@@ -115,12 +125,13 @@
         numbersep=5pt
     },
     colback=codebg,
-    colframe=pythonblue!70,
+    colframe=pythonblue!40,
     listing only,
     left=5mm,
     enhanced,
     breakable,
-    overlay={\begin{tcbclipinterior}\fill[pythonblue!20] (frame.south west) rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+    boxrule=0.5pt,
+    underlay={\begin{tcbclipinterior}\fill[pythonblue!20] (frame.south west) rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
     #1
 }
 
@@ -184,8 +195,7 @@
 \fancyhead[RE]{\leftmark}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0pt}
-% --- FIX: Set headheight to prevent warnings ---
-\setlength{\headheight}{15pt}
+% headheight is set correctly at line 62 (27.3pt), no override needed here
 
 % ===================================
 % MAKRONAREDBE
@@ -304,6 +314,8 @@
 % ===================================
 % DOKUMENT
 % ===================================
+
+\raggedbottom
 
 \begin{document}
 
